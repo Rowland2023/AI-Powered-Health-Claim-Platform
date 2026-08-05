@@ -1,244 +1,219 @@
-# Healthcare Platform
+AI-Powered Health Claim Processing Platform
+Enterprise Healthcare Backend • AI Agents • Domain-Driven Design • Event-Driven Architecture
 
-> **An enterprise-grade, event-driven healthcare platform built using Domain-Driven Design (DDD), Clean Architecture, and cloud-native microservices.**
+Production-grade backend demonstrating how Large Language Models (LLMs) safely integrate with healthcare systems through validated AI tools, clinical workflows, transactional guarantees, and Domain-Driven Design.
 
----
+Built with Python, FastAPI, PostgreSQL, Redis, and modern AI engineering practices.
 
-## Overview
 
-Healthcare Platform is a modular healthcare ecosystem designed to support hospitals, clinics, laboratories, pharmacies, insurers, and healthcare providers through scalable, secure, and resilient services.
 
-The platform enables organizations to manage patient care from registration through treatment, laboratory testing, pharmacy dispensing, billing, accounting, and audit compliance while maintaining data integrity, security, and high availability.
 
-Built with enterprise architecture principles, the platform emphasizes modularity, reliability, observability, and interoperability between healthcare domains.
 
----
 
-# Architecture
 
-The system follows **Domain-Driven Design (DDD)** and **Clean Architecture**, where each business capability is implemented as an independent module or service.
 
-```text
-Healthcare Platform
 
-                API Gateway
 
-                     │
 
-     ┌───────────────┼────────────────┐
 
- Patient       Appointment      Medical Record
-     │               │                 │
- Laboratory     Pharmacy        Notification
-     │               │                 │
- Billing ───────── Accounting ───── Audit
 
-                     │
-               Event Bus (Kafka)
 
-                     │
-              PostgreSQL + Redis
-```
+</div>
+Overview
 
-Each service owns its domain model, persistence layer, business rules, and APIs while communicating through domain events.
+Modern healthcare systems generate enormous amounts of structured and unstructured information:
 
----
+Medical records
+Prior authorizations
+Insurance claims
+Provider documentation
+Clinical notes
+Patient communications
 
-# Platform Modules
+This project demonstrates how Artificial Intelligence can safely assist healthcare operations without bypassing business rules or compliance requirements.
 
-## Patient Service
+Unlike AI demos that allow an LLM to interact directly with databases, this platform ensures every AI-generated action follows the exact same workflow as a human user.
 
-Responsible for managing patient identities and demographics.
+AI becomes an intelligent orchestration layer, not the source of truth.
 
-Features
+Why This Project Exists
 
-* Patient registration
-* Profile management
-* Emergency contacts
-* Allergies
-* Medical history summary
-* Insurance information
-* Patient search
+Healthcare organizations spend millions of hours every year on repetitive administrative work.
 
----
+Examples include:
 
-## Appointment Service
+Reviewing insurance claims
+Registering patients
+Scheduling follow-up appointments
+Validating provider information
+Processing prior authorizations
+Explaining claim denials
+Extracting information from clinical documents
 
-Schedules interactions between patients and healthcare providers.
+This platform demonstrates how AI Agents can automate those workflows while preserving security, auditability, and domain integrity.
 
-Features
+AI Architecture
 
-* Appointment booking
-* Rescheduling
-* Cancellation
-* Availability management
-* Calendar integration
-* Appointment reminders
+Instead of allowing an LLM to execute arbitrary code or query databases directly, the assistant interacts only through validated AI Tools.
 
----
-
-## Medical Record Service
-
-Maintains longitudinal patient clinical records.
-
-Features
-
-* Diagnoses
-* Clinical notes
-* Vital signs
-* Treatment plans
-* Medical history
-* Immunizations
-* Document attachments
-
----
-
-## Laboratory Service
-
-Supports laboratory workflows from request through result reporting.
-
-Features
-
-* Laboratory orders
-* Specimen tracking
-* Result validation
-* Diagnostic reports
-* Laboratory workflow
-* Result notifications
-
----
-
-## Pharmacy Service
-
-Manages medication inventory and dispensing.
-
-Features
-
-* Prescription management
-* Drug dispensing
-* Medication inventory
-* Reorder management
-* Drug interaction validation
-* Controlled medication tracking
-
----
-
-## Billing Service
-
-Handles healthcare billing and insurance workflows.
-
-Features
-
-* Patient invoices
-* Insurance claims
-* Billing adjustments
-* Service pricing
-* Payment reconciliation
-* Financial reporting
-
----
-
-## Accounting Service
-
-Implements financial accounting using double-entry principles.
-
-Modules
-
-### Payment
-
-* Patient payments
-* Insurance payments
-* Payment processing
-* Payment reconciliation
-
-### Invoice
-
-* Invoice generation
-* Invoice lifecycle
-* Billing integration
-
-### Refund
-
-* Refund requests
-* Payment reversals
-* Refund approvals
-
-### Ledger
-
-Enterprise accounting engine implementing:
-
-* Double-entry bookkeeping
-* Journal Entries
-* Journal Lines
-* Trial Balance
-* General Ledger
-* Immutable accounting records
-* Multi-currency support
-* Transactional integrity
-
----
-
-## Notification Service
-
-Provides communication across multiple channels.
-
-Supported channels
-
-* Email
-* SMS
-* Push notifications
-* In-app notifications
-
-Supports
-
-* Appointment reminders
-* Laboratory result notifications
-* Payment confirmations
-* Prescription reminders
-
----
-
-## Audit Service
-
-Provides enterprise audit capabilities.
-
-Features
-
-* Immutable audit logs
-* User activity tracking
-* Security audit trails
-* Regulatory reporting
-* Event history
-* Compliance support
-
----
-
-# Technical Architecture
-
-The platform follows a layered architecture.
-
-```text
-Presentation
+User
 
 ↓
 
-Application
+Natural Language
 
 ↓
 
-Domain
+OpenAI / LLM
 
 ↓
 
-Infrastructure
-```
+Structured Tool Calls
 
-Each module contains its own bounded context.
+↓
 
-Example
+Tool Registry
 
-```text
-patient-service
+↓
+
+JSON Schema Validation
+
+↓
+
+Authentication
+
+↓
+
+Authorization (RBAC)
+
+↓
+
+Application Use Cases
+
+↓
+
+Domain Model
+
+↓
+
+Database Transaction
+
+↓
+
+Transactional Outbox
+
+↓
+
+Event Bus
+
+↓
+
+Notification Services
+
+↓
+
+Audit Logs
+
+Every AI action is:
+
+authenticated
+authorized
+validated
+audited
+transactional
+observable
+AI Capabilities
+
+The assistant can orchestrate healthcare workflows such as:
+
+Patient Management
+Register Patient
+Find Patient
+Update Patient Information
+Medical Records
+Create Medical Record
+Update Medical Record
+Retrieve Medical History
+Claims Processing
+Create Claim
+Submit Claim
+Approve Claim
+Reject Claim
+Explain Claim Denial
+Prior Authorization
+Submit Prior Authorization
+Approve Prior Authorization
+Reject Prior Authorization
+Provider Management
+Register Provider
+Follow-up Management
+Schedule Follow-up
+Cancel Follow-up
+Notifications
+Send Patient Notification
+AI Example
+
+User asks:
+
+Submit a claim for John Doe's MRI, notify his physician, and schedule a follow-up if the insurer rejects the claim.
+
+The AI produces structured tool calls.
+
+[
+  {
+    "tool": "submit_claim"
+  },
+  {
+    "tool": "send_notification"
+  },
+  {
+    "tool": "schedule_follow_up"
+  }
+]
+
+Each tool delegates to an Application Use Case, ensuring all domain validations and business rules are enforced.
+
+AI Design Principles
+
+The assistant never:
+
+writes SQL
+bypasses repositories
+bypasses authentication
+skips domain validation
+modifies aggregates directly
+
+Instead it invokes application services exactly like a REST API.
+
+Enterprise Architecture
+
+This platform follows:
+
+Domain-Driven Design
+Clean Architecture
+Hexagonal Architecture
+SOLID Principles
+CQRS
+Repository Pattern
+Unit of Work
+Transactional Outbox
+Dependency Injection
+Optimistic Concurrency
+Event-Driven Architecture
+Bounded Contexts
+health_claim_processing/
+
+├── ai_assistant/
+├── claims/
+├── medical_records/
+├── patients/
+├── providers/
+├── prior_authorization/
+├── follow_up/
+├── notifications/
+└── shared/
+
+Each bounded context follows:
 
 presentation/
 
@@ -247,179 +222,142 @@ application/
 domain/
 
 infrastructure/
-```
+AI Assistant
+ai_assistant/
 
----
+presentation/
 
-# Design Principles
+application/
 
-The platform is built around the following architectural principles:
+domain/
 
-* Domain-Driven Design (DDD)
-* Clean Architecture
-* SOLID Principles
-* Hexagonal Architecture
-* Event-Driven Architecture
-* Command Query Responsibility Segregation (CQRS) where appropriate
-* Dependency Injection
-* Repository Pattern
-* Unit of Work
-* Domain Events
+    tooling/
 
----
+tools/
 
-# Event-Driven Communication
+infrastructure/
 
-Services communicate asynchronously through domain events.
+The AI Assistant itself is treated as its own bounded context.
 
-Example events include:
+AI Tool Framework
 
-* PatientRegistered
-* AppointmentScheduled
-* AppointmentCancelled
-* DiagnosisRecorded
-* PrescriptionIssued
-* LaboratoryTestRequested
-* LaboratoryResultPublished
-* InvoiceGenerated
-* PaymentReceived
-* RefundProcessed
-* LedgerEntryPosted
+The platform contains a reusable AI Tool Framework.
 
-This approach reduces coupling while enabling scalability and resilience.
+Tool
 
----
+↓
 
-# Reliability Features
+Tool Registry
 
-The platform is designed for production environments.
+↓
 
-Features include:
+Tool Definition
 
-* Transactional Outbox Pattern
-* Idempotent event processing
-* Exactly-once business outcomes
-* Retry policies
-* Dead Letter Queue (DLQ)
-* Distributed tracing
-* Correlation IDs
-* Optimistic concurrency control
-* Pessimistic locking where required
-* ACID database transactions
+↓
 
----
+Tool Parameters
 
-# Security
+↓
 
-Security is implemented as a shared platform capability.
+Tool Execution
 
-Capabilities include:
+↓
 
-* Authentication
-* Authorization
-* Role-Based Access Control (RBAC)
-* JWT
-* OAuth 2.0
-* API rate limiting
-* Audit logging
-* Secure secrets management
-* Input validation
-* Encryption in transit
-* Encryption at rest
+Application Use Cases
 
----
+New capabilities can be added simply by registering a new tool.
 
-# Observability
+Example Tool
+RegisterPatientTool
 
-The platform provides comprehensive operational visibility.
+↓
 
-Features
+RegisterPatientUseCase
 
-* Structured logging
-* Metrics
-* Health checks
-* Distributed tracing
-* Correlation IDs
-* Performance monitoring
-* Request tracking
-* Error monitoring
+↓
 
----
+Patient Aggregate
 
-# Technology Stack
+↓
 
-### Backend
+Patient Repository
 
-* Node.js
-* TypeScript / JavaScript
-* Python (selected services)
+The tool itself contains no business logic.
 
-### Databases
+Security
 
-* PostgreSQL
-* Redis
+Every AI request passes through:
 
-### Messaging
+JWT Authentication
+Role-Based Authorization
+Request Validation
+Domain Validation
+Audit Logging
+Transaction Management
+Healthcare AI Examples
 
-* Apache Kafka
+The platform demonstrates AI-assisted workflows such as:
 
-### Infrastructure
+Clinical document extraction
+Structured medical record generation
+Insurance claim drafting
+Claim denial explanation
+Provider lookup
+Prior authorization assistance
+Patient communication drafting
 
-* Docker
-* Kubernetes
-* Terraform
+These features are designed to assist healthcare professionals. Final decisions remain under human oversight.
 
-### Cloud
+Technology Stack
+Layer	Technology
+Backend	Python, FastAPI
+AI	OpenAI API, Function Calling, Structured Outputs
+Database	PostgreSQL
+Cache	Redis
+Messaging	Kafka / Redis Streams
+ORM	SQLAlchemy
+Validation	Pydantic
+Testing	Pytest
+Infrastructure	Docker
+Engineering Goals
 
-* Amazon Web Services (AWS)
+This project demonstrates how to build AI-enabled enterprise software that is:
 
-### Monitoring
+Secure
+Observable
+Maintainable
+Testable
+Auditable
+Transactional
+Event Driven
+Domain Centric
+Future Roadmap
+AI Conversation Memory
+Retrieval-Augmented Generation (RAG)
+FHIR Integration
+HL7 Integration
+Multi-Agent Collaboration
+Voice Clinical Assistant
+OpenTelemetry
+Kubernetes Deployment
+AI Evaluation Pipeline
+Human-in-the-Loop Review
+Multi-tenant SaaS Support
+Author
 
-* Prometheus
-* Grafana
-* OpenTelemetry
+Rowland Obi
 
-### CI/CD
+Senior Backend Engineer
 
-* GitHub Actions
+Specializing in:
 
----
-
-# Development Philosophy
-
-The project emphasizes:
-
-* Maintainability
-* Scalability
-* Security
-* Reliability
-* Testability
-* Loose coupling
-* High cohesion
-* Production readiness
-
-Every business capability is isolated within its own bounded context, allowing independent evolution, deployment, and scaling.
-
----
-
-# Future Enhancements
-
-Planned capabilities include:
-
-* Health Information Exchange (HL7/FHIR)
-* Telemedicine
-* Electronic prescriptions
-* AI-assisted clinical decision support
-* Clinical analytics
-* Population health dashboards
-* Insurance provider integration
-* Mobile patient application
-* Multi-tenancy
-* Multi-region deployment
-* Disaster recovery automation
-
----
-
-# License
-
-This project is provided for educational and portfolio purposes and demonstrates enterprise software architecture, distributed systems, and modern healthcare platform engineering practices.
+Python
+AI Backend Engineering
+FastAPI
+Django
+Domain-Driven Design
+Distributed Systems
+PostgreSQL
+Redis
+Kafka
+Event-Driven Architecture
