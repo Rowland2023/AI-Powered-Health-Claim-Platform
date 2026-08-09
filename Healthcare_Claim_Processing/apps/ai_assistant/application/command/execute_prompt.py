@@ -1,5 +1,7 @@
+
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Optional
 from uuid import UUID
 
 
@@ -13,7 +15,7 @@ class ExecutePromptCommand:
 
     user_id: UUID
 
-    conversation_id: Optional[UUID] = None
+    conversation_id: UUID | None = None
 
     temperature: float = 0.2
 

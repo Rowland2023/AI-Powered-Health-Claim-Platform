@@ -1,3 +1,6 @@
+
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -8,12 +11,16 @@ class Tool(ABC):
     """
     Base class for every AI tool.
 
-    Each Tool delegates work to an Application Use Case.
+    Each tool exposes a ToolDefinition and delegates its
+    actual work to an application use case.
     """
 
     @property
     @abstractmethod
     def definition(self) -> ToolDefinition:
+        """
+        Public definition consumed by the AI assistant.
+        """
         ...
 
     @abstractmethod
@@ -21,4 +28,7 @@ class Tool(ABC):
         self,
         **kwargs: Any,
     ) -> Any:
+        """
+        Execute the tool.
+        """
         ...
