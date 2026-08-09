@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from abc import ABC
@@ -22,7 +23,9 @@ class DomainEvent(ABC):
         - UnitOfWork
     """
 
-    aggregate_id: UUID = field(kw_only=True)
+    aggregate_id: UUID = field(
+        kw_only=True,
+    )
 
     event_id: UUID = field(
         default_factory=uuid4,
