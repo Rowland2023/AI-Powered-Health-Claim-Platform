@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from datetime import date
@@ -16,9 +17,14 @@ class RegisterPatientRequest(BaseModel):
         max_length=100,
     )
 
-    name: str = Field(
+    first_name: str = Field(
         min_length=1,
-        max_length=255,
+        max_length=100,
+    )
+
+    last_name: str = Field(
+        min_length=1,
+        max_length=100,
     )
 
     email: EmailStr
@@ -35,9 +41,29 @@ class RegisterPatientRequest(BaseModel):
 
     date_of_birth: date
 
-    address: str = Field(
+    street: str = Field(
         min_length=1,
-        max_length=500,
+        max_length=255,
+    )
+
+    city: str = Field(
+        min_length=1,
+        max_length=100,
+    )
+
+    state: str = Field(
+        min_length=1,
+        max_length=100,
+    )
+
+    postal_code: str = Field(
+        min_length=1,
+        max_length=20,
+    )
+
+    country: str = Field(
+        min_length=1,
+        max_length=100,
     )
 
 
@@ -53,9 +79,29 @@ class UpdatePatientContactInformationRequest(BaseModel):
         max_length=50,
     )
 
-    address: str = Field(
+    street: str = Field(
         min_length=1,
-        max_length=500,
+        max_length=255,
+    )
+
+    city: str = Field(
+        min_length=1,
+        max_length=100,
+    )
+
+    state: str = Field(
+        min_length=1,
+        max_length=100,
+    )
+
+    postal_code: str = Field(
+        min_length=1,
+        max_length=20,
+    )
+
+    country: str = Field(
+        min_length=1,
+        max_length=100,
     )
 
 

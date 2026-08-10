@@ -159,98 +159,28 @@ class SQLAlchemyPatientRepository(PatientRepository):
             patient.medical_record_number.value
         )
 
-        model.name = patient.name.value
+        model.first_name = patient.name.first_name
+        model.last_name = patient.name.last_name
+
         model.email = patient.email.value
         model.phone_number = patient.phone_number.value
         model.gender = patient.gender.value
         model.date_of_birth = patient.date_of_birth.value
-        model.address = patient.address.value
+
+        # -----------------------------------------------------
+        # Address
+        # -----------------------------------------------------
+
+        model.street = patient.address.street
+        model.city = patient.address.city
+        model.state = patient.address.state
+        model.postal_code = patient.address.postal_code
+        model.country = patient.address.country
+
+        # -----------------------------------------------------
+        # Status and timestamps
+        # -----------------------------------------------------
+
         model.active = patient.active
         model.created_at = patient.created_at
         model.updated_at = patient.updated_at
-
-        # -----------------------------------------------------
-        # Insurance policy
-        # -----------------------------------------------------
-
-        if patient.insurance_policy is None:
-            model.insurance_policy = None
-
-        else:
-            if model.insurance_policy is None:
-                model.insurance_policy = (
-                    PatientMapper._insurance_policy_to_model(
-                        patient.insurance_policy,
-                        patient.id,
-                    )
-                )
-
-            else:
-                policy_model = model.insurance_policy
-                policy = patient.insurance_policy
-
-                policy_model.id = policy.id
-                policy_model.insurance_number = (
-                    policy.insurance_number.value
-                )
-                policy_model.provider = policy.provider
-                policy_model.policy_type = policy.policy_type
-                policy_model.effective_date = (
-                    policy.effective_date
-                )
-                policy_model.expiry_date = policy.expiry_date
-                policy_model.status = policy.status.value
-
-        # -----------------------------------------------------
-        # Emergency contacts
-        # -----------------------------------------------------
-        #
-        # Because the aggregate owns the collection and there
-        # is currently no separate contact repository, we
-        # synchronize the child collection here.
-        #
-
-        existing_contacts = {
-            contact.id: contact
-            for contact in model.emergency_contacts
-        }
-
-        incoming_contacts = {
-            contact.id: contact
-            for contact in patient.emergency_contacts
-        }
-
-        # Remove contacts that no longer belong to the aggregate.
-        model.emergency_contacts = [
-            contact_model
-            for contact_id, contact_model in existing_contacts.items()
-            if contact_id in incoming_contacts
-        ]
-
-        # Update existing contacts and add new ones.
-        existing_by_id = {
-            contact.id: contact
-            for contact in model.emergency_contacts
-        }
-
-        for contact in patient.emergency_contacts:
-
-            existing = existing_by_id.get(contact.id)
-
-            if existing is None:
-                model.emergency_contacts.append(
-                    PatientMapper._emergency_contact_to_model(
-                        contact,
-                        patient.id,
-                    )
-                )
-                continue
-
-            existing.name = contact.name.value
-            existing.phone_number = contact.phone_number.value
-            existing.relationship = contact.relationship
-            existing.email = (
-                contact.email.value
-                if contact.email is not None
-                else None
-            )

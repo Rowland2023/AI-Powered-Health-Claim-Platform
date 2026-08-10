@@ -9,10 +9,10 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
-from shared.domain.events.domain_event import DomainEvent
-from shared.infrastructure.database.persistence.base import Base
+from shared.domain.domain_event import DomainEvent
+from shared.infrastructure.persistence.base import Base
 
-from patient.application.ports.outbox_repository import (
+from shared.ports.outbox_repository import (
     OutboxRepository,
 )
 

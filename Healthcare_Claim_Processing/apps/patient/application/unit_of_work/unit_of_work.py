@@ -6,9 +6,7 @@ from abc import ABC, abstractmethod
 from patient.application.repositories.patient_repository import (
     PatientRepository,
 )
-from shared.application.repositories.outbox_repository import (
-    OutboxRepository,
-)
+from shared.ports.outbox_repository import OutboxRepository
 
 
 class UnitOfWork(ABC):
