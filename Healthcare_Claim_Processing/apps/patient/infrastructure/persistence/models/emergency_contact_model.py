@@ -5,7 +5,7 @@ from uuid import UUID
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from shared.infrastructure.persistence.base import Base
 
@@ -47,7 +47,8 @@ class EmergencyContactModel(Base):
         nullable=False,
     )
 
-    relationship: Mapped[str] = mapped_column(
+    contact_relationship: Mapped[str] = mapped_column(
+        "relationship",
         String(100),
         nullable=False,
     )
@@ -55,4 +56,9 @@ class EmergencyContactModel(Base):
     email: Mapped[str | None] = mapped_column(
         String(320),
         nullable=True,
+    )
+
+    patient: Mapped["PatientModel"] = relationship(
+        "PatientModel",
+        back_populates="emergency_contacts",
     )

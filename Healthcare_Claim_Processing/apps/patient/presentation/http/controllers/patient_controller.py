@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from uuid import UUID
@@ -88,23 +89,34 @@ class PatientController:
             medical_record_number=MedicalRecordNumber(
                 request.medical_record_number
             ),
+
             name=PatientName(
-                request.name
+                first_name=request.first_name,
+                last_name=request.last_name,
             ),
+
             email=Email(
                 request.email
             ),
+
             phone_number=PhoneNumber(
                 request.phone_number
             ),
+
             gender=Gender(
                 request.gender
             ),
+
             date_of_birth=DateOfBirth(
                 request.date_of_birth
             ),
+
             address=Address(
-                request.address
+                street=request.street,
+                city=request.city,
+                state=request.state,
+                postal_code=request.postal_code,
+                country=request.country,
             ),
         )
 
@@ -131,14 +143,21 @@ class PatientController:
 
         command = UpdatePatientContactInformationCommand(
             patient_id=patient_id,
+
             email=Email(
                 request.email
             ),
+
             phone_number=PhoneNumber(
                 request.phone_number
             ),
+
             address=Address(
-                request.address
+                street=request.street,
+                city=request.city,
+                state=request.state,
+                postal_code=request.postal_code,
+                country=request.country,
             ),
         )
 
@@ -168,24 +187,32 @@ class PatientController:
 
         return PatientResponse(
             id=patient.id,
+
             medical_record_number=str(
                 patient.medical_record_number
             ),
+
             name=str(
                 patient.name
             ),
+
             email=str(
                 patient.email
             ),
+
             phone_number=str(
                 patient.phone_number
             ),
+
             gender=str(
                 patient.gender
             ),
+
             date_of_birth=patient.date_of_birth.value,
+
             address=str(
                 patient.address
             ),
+
             active=patient.active,
         )

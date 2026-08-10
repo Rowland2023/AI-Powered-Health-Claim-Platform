@@ -1,15 +1,9 @@
-from patient.infrastructure.persistence.models.insurance_policy_model import (
-    InsurancePolicyModel,
-)
-from patient.infrastructure.persistence.models.emergency_contact_model import (
-    EmergencyContactModel,
-)
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from uuid import UUID
 
-from sqlalchemy import Boolean, DateTime, String
+from sqlalchemy import Boolean, Date, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -18,10 +12,13 @@ from shared.infrastructure.persistence.base import Base
 
 class PatientModel(Base):
     """
-    SQLAlchemy persistence model for the Patient aggregate root.
+    SQLAlchemy persistence model for the Patient aggregate.
 
-    This model contains persistence concerns only.
-    Business rules remain inside the domain Patient aggregate.
+    This model belongs entirely to infrastructure.
+
+    It must not be imported by:
+        - patient.domain
+        - patient.application
     """
 
     __tablename__ = "patients"
@@ -32,39 +29,64 @@ class PatientModel(Base):
     )
 
     medical_record_number: Mapped[str] = mapped_column(
-        String(100),
+        String(50),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    name: Mapped[str] = mapped_column(
-        String(255),
+    first_name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    last_name: Mapped[str] = mapped_column(
+        String(100),
         nullable=False,
     )
 
     email: Mapped[str] = mapped_column(
-        String(320),
+        String(255),
         nullable=False,
     )
 
     phone_number: Mapped[str] = mapped_column(
-        String(50),
+        String(30),
         nullable=False,
     )
 
     gender: Mapped[str] = mapped_column(
-        String(50),
+        String(20),
         nullable=False,
     )
 
-    date_of_birth: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
+    date_of_birth: Mapped[date] = mapped_column(
+        Date,
         nullable=False,
     )
 
-    address: Mapped[str] = mapped_column(
-        String(500),
+    street: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    city: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    state: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    postal_code: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+    )
+
+    country: Mapped[str] = mapped_column(
+        String(100),
         nullable=False,
     )
 
@@ -89,12 +111,10 @@ class PatientModel(Base):
         back_populates="patient",
         uselist=False,
         cascade="all, delete-orphan",
-        lazy="selectin",
     )
 
     emergency_contacts: Mapped[list["EmergencyContactModel"]] = relationship(
         "EmergencyContactModel",
         back_populates="patient",
         cascade="all, delete-orphan",
-        lazy="selectin",
     )

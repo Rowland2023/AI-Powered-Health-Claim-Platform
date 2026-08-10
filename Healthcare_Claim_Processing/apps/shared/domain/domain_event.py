@@ -39,6 +39,16 @@ class DomainEvent(ABC):
         kw_only=True,
     )
 
+    correlation_id: UUID | None = field(
+        default=None,
+        kw_only=True,
+    )
+
+    causation_id: UUID | None = field(
+        default=None,
+        kw_only=True,
+    )
+
     @property
     def event_name(self) -> str:
         """

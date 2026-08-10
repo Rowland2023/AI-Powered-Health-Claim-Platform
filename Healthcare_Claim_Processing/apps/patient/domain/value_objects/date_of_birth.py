@@ -1,5 +1,3 @@
-### `patient/domain/value_objects/DateOfBirth.py`
-
 
 from __future__ import annotations
 
@@ -29,6 +27,24 @@ class DateOfBirth:
                 "Date of birth must be in the past."
             )
 
+    # =========================================================
+    # FACTORY
+    # =========================================================
+
+    @classmethod
+    def from_date(cls, value: date) -> "DateOfBirth":
+        """
+        Create a DateOfBirth value object from a date.
+
+        Validation remains centralized in __post_init__().
+        """
+
+        return cls(value=value)
+
+    # =========================================================
+    # AGE
+    # =========================================================
+
     def age(self, on_date: date | None = None) -> int:
         """
         Calculate the patient's age.
@@ -40,6 +56,7 @@ class DateOfBirth:
         Returns:
             Patient's age in completed years.
         """
+
         reference_date = on_date or date.today()
 
         if reference_date < self.value:
@@ -61,6 +78,10 @@ class DateOfBirth:
             years -= 1
 
         return years
+
+    # =========================================================
+    # REPRESENTATION
+    # =========================================================
 
     def __str__(self) -> str:
         return self.value.isoformat()

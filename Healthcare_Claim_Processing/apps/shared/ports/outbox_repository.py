@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Sequence
 
-from shared.domain.events.domain_event import DomainEvent
+from shared.domain.domain_event import DomainEvent
 
 
 class OutboxRepository(ABC):

@@ -12,7 +12,7 @@ from patient.infrastructure.persistence.repositories.sqlalchemy_patient_reposito
     SQLAlchemyPatientRepository,
 )
 
-from patient.infrastructure.persistence.outbox.sqlalchemy_outbox_repository import (
+from patient.infrastructure.outbox.sqlalchemy_outbox_repository import (
     SQLAlchemyOutboxRepository,
 )
 
