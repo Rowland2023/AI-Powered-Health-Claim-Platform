@@ -2,6 +2,7 @@
 from datetime import date
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -21,9 +22,9 @@ from patient.domain.value_objects.medical_record_number import (
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
 
-from patient.infrastructure.persistence.outbox.sqlalchemy_outbox_repository import (
+from patient.infrastructure.outbox.sqlalchemy_outbox_repository import (
     OutboxEventModel,
-    SqlAlchemyOutboxRepository,
+    SQLAlchemyOutboxRepository,
 )
 
 
@@ -54,7 +55,7 @@ async def session_factory(engine):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def session(session_factory):
     async with session_factory() as session:
         yield session
@@ -78,7 +79,7 @@ async def test_add_domain_event_to_outbox(
     session: AsyncSession,
     patient: Patient,
 ):
-    repository = SqlAlchemyOutboxRepository(
+    repository = SQLAlchemyOutboxRepository(
         session
     )
 
@@ -109,7 +110,7 @@ async def test_add_all_domain_events(
     session: AsyncSession,
     patient: Patient,
 ):
-    repository = SqlAlchemyOutboxRepository(
+    repository = SQLAlchemyOutboxRepository(
         session
     )
 

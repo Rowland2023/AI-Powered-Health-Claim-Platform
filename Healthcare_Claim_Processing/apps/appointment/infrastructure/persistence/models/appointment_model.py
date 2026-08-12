@@ -5,32 +5,38 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import DateTime, String, Text
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from shared.infrastructure.database.base import Base
+from shared.infrastructure.persistence.base import Base
 
 
 class AppointmentModel(Base):
     """
     SQLAlchemy persistence model for the Appointment aggregate.
 
-    This model represents the database representation of an
-    Appointment. It is infrastructure code and must not be
-    used by the domain layer.
+    This model belongs entirely to infrastructure.
+
+    It must not be imported by:
+        - appointment.domain
+        - appointment.application
     """
 
     __tablename__ = "appointments"
 
     id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
         primary_key=True,
     )
 
     patient_id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
         nullable=False,
         index=True,
     )
 
     provider_id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
         nullable=False,
         index=True,
     )
