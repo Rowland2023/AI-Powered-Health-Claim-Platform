@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import os
@@ -8,6 +7,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from shared.config.environment import load_environment
+
 
 def create_database_engine() -> AsyncEngine:
     """
@@ -16,6 +17,8 @@ def create_database_engine() -> AsyncEngine:
     The database URL is supplied through the environment rather
     than being hard-coded into the application.
     """
+
+    load_environment()
 
     database_url = os.getenv("DATABASE_URL")
 
