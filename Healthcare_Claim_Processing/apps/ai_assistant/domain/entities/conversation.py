@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
 from shared.domain.aggregate_root import AggregateRoot
@@ -31,7 +31,7 @@ class Conversation(AggregateRoot):
         self._id = id
         self._user_id = user_id
         self._messages = messages or []
-        self._created_at = created_at or datetime.utcnow()
+        self._created_at = created_at or datetime.now(timezone.utc)
 
     @classmethod
     def start(
@@ -44,10 +44,11 @@ class Conversation(AggregateRoot):
             user_id=user_id,
         )
 
-        conversation.record_event(
+        conversation.add_domain_event(
             ConversationStarted(
-                conversation.id,
-                user_id,
+                conversation_id=conversation.id,
+                user_id=user_id,
+                aggregate_id=conversation.id,
             )
         )
 
@@ -77,10 +78,11 @@ class Conversation(AggregateRoot):
 
         self._messages.append(message)
 
-        self.record_event(
+        self.add_domain_event(
             UserMessageAdded(
-                self.id,
-                message.id,
+                conversation_id=self.id,
+                message_id=message.id,
+                aggregate_id=self.id,
             )
         )
 
@@ -95,10 +97,11 @@ class Conversation(AggregateRoot):
 
         self._messages.append(message)
 
-        self.record_event(
+        self.add_domain_event(
             AssistantMessageAdded(
-                self.id,
-                message.id,
+                conversation_id=self.id,
+                message_id=message.id,
+                aggregate_id=self.id,
             )
         )
 
