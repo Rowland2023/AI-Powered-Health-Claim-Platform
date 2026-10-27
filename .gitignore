@@ -19,3 +19,17 @@ dist/
 build/
 *.sqlite3
 db.sqlite3
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+env/
+.venv/
+venv/
+.env
+*.log
+audit-repos.js
