@@ -17,3 +17,5 @@ coverage/
 htmlcov/
 dist/
 build/
+*.sqlite3
+db.sqlite3
