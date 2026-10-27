@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ai_assistant.domain.tool import Tool
-from ai_assistant.domain.tool_registry import ToolRegistry
+from ai_assistant.domain.tooling.tool import Tool
+from ai_assistant.domain.tooling.tool_registry import ToolRegistry
 
 
 class ToolExecutionService:
