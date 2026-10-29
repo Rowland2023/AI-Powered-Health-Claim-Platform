@@ -1,59 +1,41 @@
+from django.contrib import admin
+
+from apps.laboratory_service.infrastructure.orm.models import (
+    DiagnosticReportResultORMModel,
+    LabOrderORMModel,
+    LabOrderRequestedTestORMModel,
+    SpecimenORMModel,
+)
+
+
 @admin.register(LabOrderORMModel)
 class LabOrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "patient_id",
-        "status_badge",
-        "created_at",
-    )
-
-    list_filter = ("status",)
-
-    search_fields = (
-        "=id",
-        "=patient_id",
-    )
-
-    readonly_fields = (
-        "id",
-        "patient_id",
         "encounter_id",
         "ordering_physician_id",
         "status",
-        "created_at",
-        "updated_at",
     )
+    list_filter = ("status",)
+    search_fields = ("id", "patient_id", "encounter_id")
 
-    inlines = [
-        SpecimenInline,
-        DiagnosticReportResultInline,
-    ]
 
-    ordering = ("-created_at",)
+@admin.register(LabOrderRequestedTestORMModel)
+class LabOrderRequestedTestAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "test_code", "test_name")
+    search_fields = ("test_code", "test_name")
 
-    def has_add_permission(self, request):
-        return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+@admin.register(SpecimenORMModel)
+class SpecimenAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "specimen_type", "barcode", "collected_at")
+    search_fields = ("barcode",)
+    list_filter = ("specimen_type",)
 
-    def has_change_permission(self, request, obj=None):
-        return False
 
-    @admin.display(description="Status")
-    def status_badge(self, obj):
-        colors = {
-            "REQUESTED": "#0d6efd",
-            "SPECIMEN_COLLECTED": "#0dcaf0",
-            "PROCESSING": "#ffc107",
-            "RESULTED": "#fd7e14",
-            "VALIDATED": "#198754",
-            "CANCELLED": "#dc3545",
-        }
-
-        return format_html(
-            '<span style="background:{};color:#fff;padding:3px 8px;'
-            'border-radius:4px;font-size:11px;font-weight:bold">{}</span>',
-            colors.get(obj.status, "#6c757d"),
-            obj.status,
-        )
+@admin.register(DiagnosticReportResultORMModel)
+class DiagnosticReportResultAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "test_code", "test_name", "status")
+    search_fields = ("test_code", "test_name")
+    list_filter = ("status",)

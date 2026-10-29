@@ -4,8 +4,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from apps.laboratory.domain.value_objects import ResultStatus, LabTestCode
-from apps.laboratory.domain.exceptions import (
+from apps.laboratory_service.domain.value_objects import ResultStatus, LabTestCode
+from apps.laboratory_service.domain.exceptions import (
     InvalidResultDataException,
     IllegalResultStateTransitionException,
 )

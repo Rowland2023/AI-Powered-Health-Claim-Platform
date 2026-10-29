@@ -2,19 +2,19 @@
 
 from django.db import transaction
 
-from apps.laboratory.application.dto import (
+from apps.laboratory_service.application.use_cases.dto import (
     CollectSpecimenInputDTO,
     LaboratoryOrderOutputDTO,
     SpecimenOutputDTO,
     TestResultOutputDTO,
 )
-from apps.laboratory.domain.exceptions import (
+from apps.laboratory_service.domain.exceptions import (
     InvalidSpecimenDataException,
     OrderNotFoundException,
 )
-from apps.laboratory.domain.models import LaboratoryOrderAggregate
-from apps.laboratory.domain.repositories import ILaboratoryRepository
-from apps.laboratory.domain.value_objects import SpecimenType
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.repositories import ILaboratoryRepository
+from apps.laboratory_service.domain.value_objects import SpecimenType
 
 
 class CollectSpecimenUseCase:

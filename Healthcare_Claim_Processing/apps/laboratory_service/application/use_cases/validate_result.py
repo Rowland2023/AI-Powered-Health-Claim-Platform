@@ -2,15 +2,15 @@
 
 from django.db import transaction
 
-from apps.laboratory.application.dto import (
+from apps.laboratory_service.application.use_cases.dto import (
     LaboratoryOrderOutputDTO,
     SpecimenOutputDTO,
     TestResultOutputDTO,
     ValidateResultInputDTO,
 )
-from apps.laboratory.domain.exceptions import OrderNotFoundException
-from apps.laboratory.domain.models import LaboratoryOrderAggregate
-from apps.laboratory.domain.repositories import ILaboratoryRepository
+from apps.laboratory_service.domain.exceptions import OrderNotFoundException
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.repositories import ILaboratoryRepository
 
 
 class ValidateLabResultUseCase:

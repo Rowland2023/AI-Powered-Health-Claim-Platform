@@ -3,8 +3,8 @@
 import uuid
 from datetime import datetime, timezone
 from typing import Optional
-from apps.laboratory.domain.value_objects import SpecimenType
-from apps.laboratory.domain.exceptions import InvalidSpecimenDataException
+from apps.laboratory_service.domain.value_objects import SpecimenType
+from apps.laboratory_service.domain.exceptions import InvalidSpecimenDataException
 
 
 class Specimen:

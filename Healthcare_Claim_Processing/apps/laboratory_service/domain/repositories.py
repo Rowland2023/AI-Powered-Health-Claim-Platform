@@ -4,7 +4,7 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from apps.laboratory.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
 
 
 class ILaboratoryRepository(ABC):

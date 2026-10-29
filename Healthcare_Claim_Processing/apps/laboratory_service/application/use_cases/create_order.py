@@ -2,12 +2,12 @@
 
 from django.db import transaction
 
-from apps.laboratory.application.dto import (
+from apps.laboratory_service.application.use_cases.dto import (
     CreateOrderInputDTO,
     LaboratoryOrderOutputDTO,
 )
-from apps.laboratory.domain.models import LaboratoryOrderAggregate
-from apps.laboratory.domain.repositories import ILaboratoryRepository
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.repositories import ILaboratoryRepository
 
 
 class CreateLabOrderUseCase:

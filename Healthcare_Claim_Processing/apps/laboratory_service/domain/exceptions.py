@@ -93,6 +93,7 @@ class InvalidSpecimenDataException(LaboratoryDomainException):
 
 class MissingTestResultsException(LaboratoryDomainException):
     """Raised when attempting to validate or finalize an order without attached results."""
+
     code = "MISSING_TEST_RESULTS"
 
     def __init__(self, order_id: str):
@@ -102,7 +103,6 @@ class MissingTestResultsException(LaboratoryDomainException):
             details={"order_id": order_id},
         )
 
-
 class InvalidResultDataException(LaboratoryDomainException):
     """Raised when a test result fails quantitative/qualitative data invariants."""
     code = "INVALID_RESULT_DATA"
@@ -111,3 +111,8 @@ class InvalidResultDataException(LaboratoryDomainException):
 class IllegalResultStateTransitionException(LaboratoryDomainException):
     """Raised when attempting illegal state changes on a TestResult entity (e.g., re-finalizing)."""
     code = "ILLEGAL_RESULT_STATE_TRANSITION"
+
+class RepositoryPersistenceException(LaboratoryDomainException):
+    """Raised when laboratory aggregate persistence fails."""
+
+    code = "LABORATORY_REPOSITORY_PERSISTENCE_ERROR"

@@ -3,21 +3,22 @@
 import uuid
 from typing import Any, List, Optional, Union
 
-from apps.laboratory.domain.events import (
+from apps.laboratory_service.domain.events import (
     LabOrderCreatedEvent,
     LabResultValidatedEvent,
     SpecimenCollectedEvent,
 )
-from apps.laboratory.domain.entities.specimen import Specimen
-from apps.laboratory.domain.entities.test_result import TestResult
-from apps.laboratory.domain.value_objects import (
+from apps.laboratory_service.domain.entities.specimen import Specimen
+from apps.laboratory_service.domain.entities.test_result import TestResult
+from apps.laboratory_service.domain.value_objects import (
     LabOrderStatus,
     LabTestCode,
     SpecimenType,
 )
-from apps.laboratory.domain.exceptions import (
+from apps.laboratory_service.domain.exceptions import (
     InvalidOrderStateException,
     InvalidResultDataException,
+    MissingTestResultsException,
 )
 
 
@@ -143,14 +144,12 @@ class LaboratoryOrderAggregate:
 
     def validate_results(self, validator_pathologist_id: uuid.UUID) -> None:
         """Validates attached results and updates order status to VALIDATED."""
+        if not self.results:
+            raise MissingTestResultsException(order_id=str(self.id))
+
         if self.status != LabOrderStatus.PROCESSING:
             raise InvalidOrderStateException(
                 f"Order '{self.id}' must be in PROCESSING status to validate results. Current status: '{self.status}'."
-            )
-
-        if not self.results:
-            raise InvalidResultDataException(
-                f"Cannot validate order '{self.id}' with no attached test results."
             )
 
         # Triggers entity-level invariants on each result child

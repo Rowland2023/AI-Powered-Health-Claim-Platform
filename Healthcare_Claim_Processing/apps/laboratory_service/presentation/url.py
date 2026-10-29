@@ -1,7 +1,7 @@
 # apps/laboratory/presentation/urls.py
 
 from django.urls import path
-from apps.laboratory.presentation.views import (
+from apps.laboratory_service.presentation.views import (
     CreateLabOrderAPIView,
     CollectSpecimenAPIView,
     ValidateLabResultAPIView,

@@ -3,9 +3,10 @@
 import uuid
 import pytest
 
-from apps.laboratory.domain.models import LaboratoryOrderAggregate
-from apps.laboratory.domain.value_objects import SpecimenType, LabOrderStatus
-from apps.laboratory.domain.events import LabResultValidatedEvent
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.value_objects import SpecimenType, LabOrderStatus
+from apps.laboratory_service.domain.events import LabResultValidatedEvent
+from apps.laboratory_service.domain.exceptions import MissingTestResultsException
 
 
 class TestLaboratoryOrderAggregateValidation:
@@ -32,7 +33,7 @@ class TestLaboratoryOrderAggregateValidation:
         pathologist_id = uuid.uuid4()
 
         # Act & Assert
-        with pytest.raises(ValueError, match=r"(?i)completed test results"):
+        with pytest.raises(MissingTestResultsException, match=r"(?i)no test results"):
             active_specimen_order.validate_results(validator_pathologist_id=pathologist_id)
 
         # Assert zero side-effects occurred on state or events
@@ -63,4 +64,4 @@ class TestLaboratoryOrderAggregateValidation:
         assert isinstance(event, LabResultValidatedEvent)
         assert event.order_id == str(active_specimen_order.id)
         assert event.validated_by == str(pathologist_id)
-        assert event.status == str(LabOrderStatus.VALIDATED)
+        assert event.status == LabOrderStatus.VALIDATED.value
