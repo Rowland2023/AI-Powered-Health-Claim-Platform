@@ -5,10 +5,9 @@ from uuid import UUID, uuid4
 
 from shared.domain.aggregate_root import AggregateRoot
 
+from ..events.assistant_message_added import AssistantMessageAdded
 from ..events.conversation_started import ConversationStarted
 from ..events.user_message_added import UserMessageAdded
-from ..events.assistant_message_added import AssistantMessageAdded
-
 from .message import Message
 
 

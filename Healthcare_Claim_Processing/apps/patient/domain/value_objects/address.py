@@ -28,34 +28,22 @@ class Address:
         country = self.country.strip().upper()
 
         if not street:
-            raise ValueError(
-                "Street address cannot be empty."
-            )
+            raise ValueError("Street address cannot be empty.")
 
         if not city:
-            raise ValueError(
-                "City cannot be empty."
-            )
+            raise ValueError("City cannot be empty.")
 
         if not state:
-            raise ValueError(
-                "State cannot be empty."
-            )
+            raise ValueError("State cannot be empty.")
 
         if not postal_code:
-            raise ValueError(
-                "Postal code cannot be empty."
-            )
+            raise ValueError("Postal code cannot be empty.")
 
         if not country:
-            raise ValueError(
-                "Country cannot be empty."
-            )
+            raise ValueError("Country cannot be empty.")
 
         if len(country) != 2:
-            raise ValueError(
-                "Country must be a two-letter ISO country code."
-            )
+            raise ValueError("Country must be a two-letter ISO country code.")
 
         object.__setattr__(
             self,

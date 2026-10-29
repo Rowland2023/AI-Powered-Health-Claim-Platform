@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from sqlalchemy.ext.asyncio import (
@@ -9,7 +8,6 @@ from sqlalchemy.ext.asyncio import (
 from shared.infrastructure.database.engine import (
     create_database_engine,
 )
-
 
 engine = create_database_engine()
 

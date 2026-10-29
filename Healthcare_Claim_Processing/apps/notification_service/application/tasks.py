@@ -1,7 +1,8 @@
 # apps/notification/application/tasks.py
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from celery import shared_task
 from django.core.cache import cache
 
@@ -23,7 +24,7 @@ def handle_lab_result_validated(self, event_payload: Dict[str, Any]) -> None:
     """
     Consumes the 'lab.result_validated' event from the Outbox message bus.
     Dispatches SMS and Email notifications to the patient and ordering physician.
-    
+
     Guarantees:
     - Idempotency: Prevents duplicate notifications using Redis cache keys.
     - Fault Tolerance: Exponential backoff retries with jitter for transient failures.
@@ -39,7 +40,7 @@ def handle_lab_result_validated(self, event_payload: Dict[str, Any]) -> None:
     if not order_id or not patient_id:
         logger.error(
             "Malformed event payload received. Missing order_id or patient_id. Payload: %s",
-            event_payload
+            event_payload,
         )
         return
 
@@ -48,11 +49,12 @@ def handle_lab_result_validated(self, event_payload: Dict[str, Any]) -> None:
         cache_key = f"idempotency:event:{event_id}"
         # Set lock only if key does not exist (NX=True)
         is_new_event = cache.add(cache_key, "PROCESSED", timeout=EVENT_IDEMPOTENCY_TTL_SECONDS)
-        
+
         if not is_new_event:
             logger.info(
                 "Duplicate event ignored. Event ID '%s' for Order '%s' already processed.",
-                event_id, order_id
+                event_id,
+                order_id,
             )
             return
 
@@ -60,7 +62,9 @@ def handle_lab_result_validated(self, event_payload: Dict[str, Any]) -> None:
     try:
         logger.info(
             "Dispatching lab result notification for Order '%s' (Patient: %s, Physician: %s)",
-            order_id, patient_id, physician_id
+            order_id,
+            patient_id,
+            physician_id,
         )
 
         # Example dispatch invocation:
@@ -70,6 +74,9 @@ def handle_lab_result_validated(self, event_payload: Dict[str, Any]) -> None:
     except Exception as exc:
         logger.warning(
             "Failed to dispatch notification for Order '%s'. Retrying... (Attempt %d/%d). Error: %s",
-            order_id, self.request.retries + 1, self.max_retries, str(exc)
+            order_id,
+            self.request.retries + 1,
+            self.max_retries,
+            str(exc),
         )
         raise exc

@@ -5,7 +5,6 @@ from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
-
 from appointment.domain.entities.appointment import Appointment
 from appointment.domain.value_objects.appointment_type import AppointmentType
 from appointment.infrastructure.persistence.models.appointment_model import (
@@ -127,9 +126,7 @@ async def test_update_changes_persistence_model():
 
     repository = SQLAlchemyAppointmentRepository(session)
 
-    appointment.reschedule(
-        datetime.now(timezone.utc)
-    )
+    appointment.reschedule(datetime.now(timezone.utc))
 
     await repository.update(appointment)
 

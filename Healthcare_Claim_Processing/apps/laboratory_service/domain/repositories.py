@@ -10,7 +10,7 @@ from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
 class ILaboratoryRepository(ABC):
     """
     Abstract Repository Interface defining persistence operations for `LaboratoryOrderAggregate`.
-    
+
     Implementations MUST enforce transactional integrity:
     1. Saving an aggregate AND staging its pending `domain_events` into the Outbox table
        MUST occur atomically within a single database transaction (`@transaction.atomic`).
@@ -19,12 +19,10 @@ class ILaboratoryRepository(ABC):
 
     @abstractmethod
     def save(
-        self, 
-        aggregate: LaboratoryOrderAggregate, 
-        expected_version: Optional[int] = None
+        self, aggregate: LaboratoryOrderAggregate, expected_version: Optional[int] = None
     ) -> None:
         """
-        Persists or updates the aggregate root, its child entities (Specimen, TestResult), 
+        Persists or updates the aggregate root, its child entities (Specimen, TestResult),
         and flushes pending domain events into the Outbox staging table.
 
         :param aggregate: The aggregate root instance to persist.
@@ -36,9 +34,7 @@ class ILaboratoryRepository(ABC):
 
     @abstractmethod
     def find_by_id(
-        self, 
-        order_id: uuid.UUID, 
-        for_update: bool = False
+        self, order_id: uuid.UUID, for_update: bool = False
     ) -> Optional[LaboratoryOrderAggregate]:
         """
         Retrieves an aggregate root by its primary UUID.
@@ -51,9 +47,7 @@ class ILaboratoryRepository(ABC):
 
     @abstractmethod
     def find_by_barcode(
-        self, 
-        barcode: str, 
-        for_update: bool = False
+        self, barcode: str, for_update: bool = False
     ) -> Optional[LaboratoryOrderAggregate]:
         """
         Retrieves the aggregate root associated with a specific physical specimen barcode.

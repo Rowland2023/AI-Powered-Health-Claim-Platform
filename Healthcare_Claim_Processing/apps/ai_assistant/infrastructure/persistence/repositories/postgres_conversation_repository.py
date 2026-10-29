@@ -14,21 +14,17 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from ai_assistant.domain.entities.conversation import Conversation
 from ai_assistant.domain.repositories.conversation_repository import (
     ConversationRepository,
 )
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..mappers.conversation_mapper import ConversationMapper
 from ..mappers.message_mapper import MessageMapper
 from ..mappers.tool_call_mapper import ToolCallMapper
-
 from ..models.conversation_model import ConversationModel
-from ..models.message_model import MessageModel
-from ..models.tool_call_model import ToolCallModel
 
 
 class PostgresConversationRepository(ConversationRepository):
@@ -64,26 +60,16 @@ class PostgresConversationRepository(ConversationRepository):
         Child entities are persisted afterwards.
         """
 
-        conversation_exists = await self.exists(
-            conversation.id
-        )
+        conversation_exists = await self.exists(conversation.id)
 
         if conversation_exists:
-            await self._update_conversation(
-                conversation
-            )
+            await self._update_conversation(conversation)
         else:
-            await self._insert_conversation(
-                conversation
-            )
+            await self._insert_conversation(conversation)
 
-        await self._persist_messages(
-            conversation
-        )
+        await self._persist_messages(conversation)
 
-        await self._persist_tool_calls(
-            conversation
-        )
+        await self._persist_tool_calls(conversation)
 
     async def exists(
         self,
@@ -93,19 +79,11 @@ class PostgresConversationRepository(ConversationRepository):
         Determine whether the aggregate already exists.
         """
 
-        stmt = (
-            select(ConversationModel.id)
-            .where(
-                ConversationModel.id == conversation_id
-            )
-        )
+        stmt = select(ConversationModel.id).where(ConversationModel.id == conversation_id)
 
         result = await self._session.execute(stmt)
 
-        return (
-            result.scalar_one_or_none()
-            is not None
-        )
+        return result.scalar_one_or_none() is not None
 
     # ------------------------------------------------------------------
     # Private Helpers
@@ -119,9 +97,7 @@ class PostgresConversationRepository(ConversationRepository):
         Insert a new Conversation aggregate.
         """
 
-        model = ConversationMapper.to_model(
-            conversation
-        )
+        model = ConversationMapper.to_model(conversation)
 
         self._session.add(model)
 
@@ -135,22 +111,14 @@ class PostgresConversationRepository(ConversationRepository):
         Update an existing Conversation aggregate.
         """
 
-        stmt = (
-            select(ConversationModel)
-            .where(
-                ConversationModel.id
-                == conversation.id
-            )
-        )
+        stmt = select(ConversationModel).where(ConversationModel.id == conversation.id)
 
         result = await self._session.execute(stmt)
 
         model = result.scalar_one()
 
         model.status = conversation.status
-        model.updated_at = (
-            conversation.updated_at
-        )
+        model.updated_at = conversation.updated_at
 
         await self._session.flush()
 
@@ -164,7 +132,6 @@ class PostgresConversationRepository(ConversationRepository):
         """
 
         for message in conversation.messages:
-
             model = MessageMapper.to_model(
                 message=message,
                 conversation_id=conversation.id,
@@ -184,7 +151,6 @@ class PostgresConversationRepository(ConversationRepository):
         """
 
         for tool_call in conversation.tool_calls:
-
             model = ToolCallMapper.to_model(
                 tool_call=tool_call,
                 conversation_id=conversation.id,

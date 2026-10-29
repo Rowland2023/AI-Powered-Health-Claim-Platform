@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -9,11 +8,9 @@ from shared.domain.aggregate_root import AggregateRoot
 
 from patient.domain.entities.emergency_contact import EmergencyContact
 from patient.domain.entities.insurance_policy import InsurancePolicy
-
 from patient.domain.events.patient_deactivated import PatientDeactivated
 from patient.domain.events.patient_registered import PatientRegistered
 from patient.domain.events.patient_updated import PatientUpdated
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email
@@ -52,19 +49,13 @@ class Patient(AggregateRoot):
 
     insurance_policy: InsurancePolicy | None = None
 
-    emergency_contacts: list[EmergencyContact] = field(
-        default_factory=list
-    )
+    emergency_contacts: list[EmergencyContact] = field(default_factory=list)
 
     active: bool = True
 
-    created_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
-    )
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
-    updated_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
-    )
+    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def __post_init__(self) -> None:
         """

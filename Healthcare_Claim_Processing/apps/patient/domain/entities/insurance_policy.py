@@ -1,4 +1,3 @@
-
 # patient/domain/entities/insurance_policy.py
 
 from __future__ import annotations
@@ -46,20 +45,13 @@ class InsurancePolicy:
         policy_type = policy_type.strip()
 
         if not provider:
-            raise ValueError(
-                "Insurance provider cannot be empty."
-            )
+            raise ValueError("Insurance provider cannot be empty.")
 
         if not policy_type:
-            raise ValueError(
-                "Insurance policy type cannot be empty."
-            )
+            raise ValueError("Insurance policy type cannot be empty.")
 
         if expiry_date < effective_date:
-            raise ValueError(
-                "Insurance policy expiry date cannot be "
-                "before the effective date."
-            )
+            raise ValueError("Insurance policy expiry date cannot be before the effective date.")
 
         return cls(
             id=uuid4(),
@@ -86,9 +78,7 @@ class InsurancePolicy:
             provider = provider.strip()
 
             if not provider:
-                raise ValueError(
-                    "Insurance provider cannot be empty."
-                )
+                raise ValueError("Insurance provider cannot be empty.")
 
             self.provider = provider
 
@@ -96,29 +86,16 @@ class InsurancePolicy:
             policy_type = policy_type.strip()
 
             if not policy_type:
-                raise ValueError(
-                    "Insurance policy type cannot be empty."
-                )
+                raise ValueError("Insurance policy type cannot be empty.")
 
             self.policy_type = policy_type
 
-        new_effective_date = (
-            effective_date
-            if effective_date is not None
-            else self.effective_date
-        )
+        new_effective_date = effective_date if effective_date is not None else self.effective_date
 
-        new_expiry_date = (
-            expiry_date
-            if expiry_date is not None
-            else self.expiry_date
-        )
+        new_expiry_date = expiry_date if expiry_date is not None else self.expiry_date
 
         if new_expiry_date < new_effective_date:
-            raise ValueError(
-                "Insurance policy expiry date cannot be "
-                "before the effective date."
-            )
+            raise ValueError("Insurance policy expiry date cannot be before the effective date.")
 
         self.effective_date = new_effective_date
         self.expiry_date = new_expiry_date

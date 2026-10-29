@@ -1,11 +1,8 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
-
-from shared.domain.aggregate_root import AggregateRoot
 
 from appointment.domain.events.appointment_cancelled import (
     AppointmentCancelled,
@@ -28,13 +25,13 @@ from appointment.domain.events.appointment_rescheduled import (
 from appointment.domain.events.appointment_scheduled import (
     AppointmentScheduled,
 )
-
 from appointment.domain.value_objects.appointment_status import (
     AppointmentStatus,
 )
 from appointment.domain.value_objects.appointment_type import (
     AppointmentType,
 )
+from shared.domain.aggregate_root import AggregateRoot
 
 
 @dataclass
@@ -60,13 +57,9 @@ class Appointment(AggregateRoot):
 
     reason: str | None = None
 
-    created_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
-    )
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
-    updated_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
-    )
+    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def __post_init__(self) -> None:
         """
@@ -131,9 +124,7 @@ class Appointment(AggregateRoot):
         """
 
         if self.status != AppointmentStatus.SCHEDULED:
-            raise ValueError(
-                "Only scheduled appointments can be confirmed."
-            )
+            raise ValueError("Only scheduled appointments can be confirmed.")
 
         self.status = AppointmentStatus.CONFIRMED
 
@@ -158,9 +149,7 @@ class Appointment(AggregateRoot):
         """
 
         if self.status != AppointmentStatus.CONFIRMED:
-            raise ValueError(
-                "Only confirmed appointments can be checked in."
-            )
+            raise ValueError("Only confirmed appointments can be checked in.")
 
         self.status = AppointmentStatus.CHECKED_IN
 
@@ -185,9 +174,7 @@ class Appointment(AggregateRoot):
         """
 
         if self.status != AppointmentStatus.CHECKED_IN:
-            raise ValueError(
-                "Only checked-in appointments can be completed."
-            )
+            raise ValueError("Only checked-in appointments can be completed.")
 
         self.status = AppointmentStatus.COMPLETED
 
@@ -216,10 +203,7 @@ class Appointment(AggregateRoot):
             AppointmentStatus.SCHEDULED,
             AppointmentStatus.CONFIRMED,
         ):
-            raise ValueError(
-                "Only scheduled or confirmed appointments "
-                "can be cancelled."
-            )
+            raise ValueError("Only scheduled or confirmed appointments can be cancelled.")
 
         self.status = AppointmentStatus.CANCELLED
 
@@ -248,10 +232,7 @@ class Appointment(AggregateRoot):
             AppointmentStatus.SCHEDULED,
             AppointmentStatus.CONFIRMED,
         ):
-            raise ValueError(
-                "Only scheduled or confirmed appointments "
-                "can be marked as no-show."
-            )
+            raise ValueError("Only scheduled or confirmed appointments can be marked as no-show.")
 
         self.status = AppointmentStatus.NO_SHOW
 
@@ -283,10 +264,7 @@ class Appointment(AggregateRoot):
             AppointmentStatus.SCHEDULED,
             AppointmentStatus.CONFIRMED,
         ):
-            raise ValueError(
-                "Only scheduled or confirmed appointments "
-                "can be rescheduled."
-            )
+            raise ValueError("Only scheduled or confirmed appointments can be rescheduled.")
 
         previous_scheduled_at = self.scheduled_at
 

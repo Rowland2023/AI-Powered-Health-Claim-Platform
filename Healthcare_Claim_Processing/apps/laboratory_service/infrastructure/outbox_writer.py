@@ -16,9 +16,7 @@ def write_laboratory_outbox_events(aggregate, events) -> None:
         occurred_at = envelope["occurred_at"]
 
         if isinstance(occurred_at, str):
-            occurred_at = datetime.fromisoformat(
-                occurred_at.replace("Z", "+00:00")
-            )
+            occurred_at = datetime.fromisoformat(occurred_at.replace("Z", "+00:00"))
 
         payload = json.loads(
             json.dumps(

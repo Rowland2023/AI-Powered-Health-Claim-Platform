@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 import pytest
-
 from appointment.application.commands.schedule_appointment import (
     ScheduleAppointmentCommand,
 )

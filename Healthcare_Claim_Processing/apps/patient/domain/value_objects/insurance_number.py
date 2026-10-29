@@ -3,13 +3,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
-
-_INSURANCE_NUMBER_PATTERN = re.compile(
-    r"^[A-Z0-9][A-Z0-9\-]{3,49}$"
-)
+_INSURANCE_NUMBER_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9\-]{3,49}$")
 
 
 @dataclass(frozen=True)
@@ -27,14 +24,10 @@ class InsuranceNumber:
         normalized = self.value.strip().upper()
 
         if not normalized:
-            raise ValueError(
-                "Insurance number cannot be empty."
-            )
+            raise ValueError("Insurance number cannot be empty.")
 
         if not _INSURANCE_NUMBER_PATTERN.fullmatch(normalized):
-            raise ValueError(
-                f"Invalid insurance number: {self.value}"
-            )
+            raise ValueError(f"Invalid insurance number: {self.value}")
 
         object.__setattr__(
             self,

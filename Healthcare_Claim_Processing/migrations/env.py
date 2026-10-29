@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import asyncio
@@ -10,7 +9,6 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
 
 # =========================================================
 # Make apps/ importable
@@ -26,25 +24,11 @@ sys.path.insert(0, str(APPS_DIR))
 # SQLAlchemy Base
 # =========================================================
 
-from shared.infrastructure.persistence.base import Base
-
 
 # =========================================================
 # Import all persistence models
 # =========================================================
-
-from patient.infrastructure.persistence.models.patient_model import (
-    PatientModel,
-)
-
-from patient.infrastructure.persistence.models.emergency_contact_model import (
-    EmergencyContactModel,
-)
-
-from patient.infrastructure.persistence.models.insurance_policy_model import (
-    InsurancePolicyModel,
-)
-
+from shared.infrastructure.persistence.base import Base
 
 # =========================================================
 # Alembic configuration
@@ -67,6 +51,7 @@ target_metadata = Base.metadata
 # =========================================================
 # Offline migrations
 # =========================================================
+
 
 def run_migrations_offline() -> None:
     """
@@ -92,6 +77,7 @@ def run_migrations_offline() -> None:
 # Online migration helper
 # =========================================================
 
+
 def do_run_migrations(connection: Connection) -> None:
     """
     Run migrations using an existing synchronous connection.
@@ -111,6 +97,7 @@ def do_run_migrations(connection: Connection) -> None:
 # Online migrations
 # =========================================================
 
+
 async def run_migrations_online() -> None:
     """
     Run migrations using SQLAlchemy AsyncEngine.
@@ -126,9 +113,7 @@ async def run_migrations_online() -> None:
     )
 
     async with connectable.connect() as connection:
-        await connection.run_sync(
-            do_run_migrations
-        )
+        await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()
 
@@ -140,6 +125,4 @@ async def run_migrations_online() -> None:
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    asyncio.run(
-        run_migrations_online()
-    )
+    asyncio.run(run_migrations_online())

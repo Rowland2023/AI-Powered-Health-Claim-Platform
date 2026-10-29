@@ -1,17 +1,8 @@
-
 from datetime import date
 
 import pytest
 import pytest_asyncio
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
-
 from patient.domain.entities.patient import Patient
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email
@@ -21,17 +12,18 @@ from patient.domain.value_objects.medical_record_number import (
 )
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
-
 from patient.infrastructure.outbox.sqlalchemy_outbox_repository import (
     OutboxEventModel,
     SQLAlchemyOutboxRepository,
 )
-
-
-TEST_DATABASE_URL = (
-    "postgresql+asyncpg://postgres:postgres@localhost:5432/"
-    "healthcare_test"
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
 )
+
+TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/healthcare_test"
 
 
 @pytest.fixture
@@ -79,9 +71,7 @@ async def test_add_domain_event_to_outbox(
     session: AsyncSession,
     patient: Patient,
 ):
-    repository = SQLAlchemyOutboxRepository(
-        session
-    )
+    repository = SQLAlchemyOutboxRepository(session)
 
     event = patient.domain_events[0]
 
@@ -89,10 +79,7 @@ async def test_add_domain_event_to_outbox(
 
     await session.flush()
 
-    stmt = select(OutboxEventModel).where(
-        OutboxEventModel.event_id
-        == str(event.event_id)
-    )
+    stmt = select(OutboxEventModel).where(OutboxEventModel.event_id == str(event.event_id))
 
     result = await session.execute(stmt)
 
@@ -110,9 +97,7 @@ async def test_add_all_domain_events(
     session: AsyncSession,
     patient: Patient,
 ):
-    repository = SQLAlchemyOutboxRepository(
-        session
-    )
+    repository = SQLAlchemyOutboxRepository(session)
 
     patient.update_contact_information(
         email=Email("updated@example.com"),
@@ -127,11 +112,7 @@ async def test_add_all_domain_events(
     await session.flush()
 
     for event in events:
-
-        stmt = select(OutboxEventModel).where(
-            OutboxEventModel.event_id
-            == str(event.event_id)
-        )
+        stmt = select(OutboxEventModel).where(OutboxEventModel.event_id == str(event.event_id))
 
         result = await session.execute(stmt)
 

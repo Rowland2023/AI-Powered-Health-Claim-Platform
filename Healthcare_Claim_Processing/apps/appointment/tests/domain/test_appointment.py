@@ -1,9 +1,7 @@
-
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 import pytest
-
 from appointment.domain.entities.appointment import Appointment
 from appointment.domain.events.appointment_cancelled import (
     AppointmentCancelled,
@@ -33,10 +31,10 @@ from appointment.domain.value_objects.appointment_type import (
     AppointmentType,
 )
 
-
 # =========================================================
 # TEST DATA
 # =========================================================
+
 
 @pytest.fixture
 def patient_id():
@@ -79,6 +77,7 @@ def appointment(
 # SCHEDULING
 # =========================================================
 
+
 def test_schedule_creates_appointment(
     patient_id,
     provider_id,
@@ -95,10 +94,7 @@ def test_schedule_creates_appointment(
     assert appointment.id is not None
     assert appointment.patient_id == patient_id
     assert appointment.provider_id == provider_id
-    assert (
-        appointment.appointment_type
-        == AppointmentType.INITIAL_CONSULTATION
-    )
+    assert appointment.appointment_type == AppointmentType.INITIAL_CONSULTATION
     assert appointment.status == AppointmentStatus.SCHEDULED
     assert appointment.scheduled_at == scheduled_at
     assert appointment.reason == "Initial consultation"
@@ -118,6 +114,7 @@ def test_schedule_raises_appointment_scheduled_event(
 # =========================================================
 # CONFIRMATION
 # =========================================================
+
 
 def test_confirm_changes_status_to_confirmed(
     appointment,
@@ -156,6 +153,7 @@ def test_cannot_confirm_non_scheduled_appointment(
 # CHECK-IN
 # =========================================================
 
+
 def test_check_in_changes_status_to_checked_in(
     appointment,
 ):
@@ -191,6 +189,7 @@ def test_cannot_check_in_unconfirmed_appointment(
 # =========================================================
 # COMPLETION
 # =========================================================
+
 
 def test_complete_changes_status_to_completed(
     appointment,
@@ -232,6 +231,7 @@ def test_cannot_complete_unchecked_in_appointment(
 # CANCELLATION
 # =========================================================
 
+
 def test_cancel_scheduled_appointment(
     appointment,
 ):
@@ -270,8 +270,7 @@ def test_cannot_cancel_checked_in_appointment(
 
     with pytest.raises(
         ValueError,
-        match="Only scheduled or confirmed appointments "
-        "can be cancelled.",
+        match="Only scheduled or confirmed appointments can be cancelled.",
     ):
         appointment.cancel()
 
@@ -279,6 +278,7 @@ def test_cannot_cancel_checked_in_appointment(
 # =========================================================
 # NO-SHOW
 # =========================================================
+
 
 def test_mark_no_show_changes_status(
     appointment,
@@ -308,8 +308,7 @@ def test_cannot_mark_checked_in_appointment_as_no_show(
 
     with pytest.raises(
         ValueError,
-        match="Only scheduled or confirmed appointments "
-        "can be marked as no-show.",
+        match="Only scheduled or confirmed appointments can be marked as no-show.",
     ):
         appointment.mark_no_show()
 
@@ -317,6 +316,7 @@ def test_cannot_mark_checked_in_appointment_as_no_show(
 # =========================================================
 # RESCHEDULING
 # =========================================================
+
 
 def test_reschedule_changes_scheduled_time(
     appointment,
@@ -369,8 +369,7 @@ def test_cannot_reschedule_completed_appointment(
 
     with pytest.raises(
         ValueError,
-        match="Only scheduled or confirmed appointments "
-        "can be rescheduled.",
+        match="Only scheduled or confirmed appointments can be rescheduled.",
     ):
         appointment.reschedule(new_time)
 
@@ -378,6 +377,7 @@ def test_cannot_reschedule_completed_appointment(
 # =========================================================
 # LIFECYCLE
 # =========================================================
+
 
 def test_complete_appointment_follows_valid_lifecycle(
     appointment,
@@ -400,6 +400,7 @@ def test_complete_appointment_follows_valid_lifecycle(
 # =========================================================
 # DOMAIN EVENT COLLECTION
 # =========================================================
+
 
 def test_events_are_accumulated_by_aggregate(
     appointment,

@@ -2,7 +2,6 @@ from openai import AsyncOpenAI
 
 
 class OpenAIClient:
-
     def __init__(
         self,
         api_key: str,

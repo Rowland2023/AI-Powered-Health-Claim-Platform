@@ -3,22 +3,18 @@
 from shared.application.result import Result
 
 from ai_assistant.application.dto.ai_response_dto import AIResponseDTO
-
 from ai_assistant.application.queries.get_conversation_history import (
     GetConversationHistoryQuery,
 )
-
+from ai_assistant.application.services.conversation_service import (
+    ConversationService,
+)
 from ai_assistant.application.services.llm_service import (
     LLMService,
 )
 
-from ai_assistant.application.services.conversation_service import (
-    ConversationService,
-)
-
 
 class SummarizeConversationUseCase:
-
     def __init__(
         self,
         llm_service: LLMService,

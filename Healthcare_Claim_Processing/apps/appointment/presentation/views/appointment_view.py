@@ -6,7 +6,6 @@ from uuid import UUID
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-
 from patient.application.commands.register_patient import (
     RegisterPatientCommand,
 )
@@ -17,7 +16,6 @@ from patient.application.use_cases.update_patient_contact_information import (
     UpdatePatientContactInformationCommand,
     UpdatePatientContactInformationUseCase,
 )
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email
@@ -27,7 +25,6 @@ from patient.domain.value_objects.medical_record_number import (
 )
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
-
 from patient.presentation.http.schemas.patient_schema import (
     PatientResponse,
     RegisterPatientRequest,
@@ -37,9 +34,7 @@ from patient.presentation.http.schemas.patient_schema import (
 
 def create_patient_views(
     register_patient_use_case: RegisterPatientUseCase,
-    update_patient_contact_information_use_case: (
-        UpdatePatientContactInformationUseCase
-    ),
+    update_patient_contact_information_use_case: (UpdatePatientContactInformationUseCase),
 ):
     """
     Create Django HTTP views with application use cases
@@ -63,13 +58,9 @@ def create_patient_views(
     @require_http_methods(["POST"])
     async def register_patient(request):
         try:
-            payload = json.loads(
-                request.body.decode("utf-8")
-            )
+            payload = json.loads(request.body.decode("utf-8"))
 
-            schema = RegisterPatientRequest.model_validate(
-                payload
-            )
+            schema = RegisterPatientRequest.model_validate(payload)
 
         except JSONDecodeError:
             return JsonResponse(
@@ -84,21 +75,15 @@ def create_patient_views(
             )
 
         command = RegisterPatientCommand(
-            medical_record_number=MedicalRecordNumber(
-                schema.medical_record_number
-            ),
+            medical_record_number=MedicalRecordNumber(schema.medical_record_number),
             name=PatientName(
                 first_name=schema.first_name,
                 last_name=schema.last_name,
             ),
             email=Email(schema.email),
-            phone_number=PhoneNumber(
-                schema.phone_number
-            ),
+            phone_number=PhoneNumber(schema.phone_number),
             gender=Gender(schema.gender),
-            date_of_birth=DateOfBirth(
-                schema.date_of_birth
-            ),
+            date_of_birth=DateOfBirth(schema.date_of_birth),
             address=Address(
                 street=schema.street,
                 city=schema.city,
@@ -108,15 +93,11 @@ def create_patient_views(
             ),
         )
 
-        patient = await register_patient_use_case.execute(
-            command
-        )
+        patient = await register_patient_use_case.execute(command)
 
         response = PatientResponse(
             id=patient.id,
-            medical_record_number=str(
-                patient.medical_record_number
-            ),
+            medical_record_number=str(patient.medical_record_number),
             name=str(patient.name),
             email=str(patient.email),
             phone_number=str(patient.phone_number),
@@ -137,14 +118,9 @@ def create_patient_views(
         patient_id: UUID,
     ):
         try:
-            payload = json.loads(
-                request.body.decode("utf-8")
-            )
+            payload = json.loads(request.body.decode("utf-8"))
 
-            schema = (
-                UpdatePatientContactInformationRequest
-                .model_validate(payload)
-            )
+            schema = UpdatePatientContactInformationRequest.model_validate(payload)
 
         except JSONDecodeError:
             return JsonResponse(
@@ -161,9 +137,7 @@ def create_patient_views(
         command = UpdatePatientContactInformationCommand(
             patient_id=patient_id,
             email=Email(schema.email),
-            phone_number=PhoneNumber(
-                schema.phone_number
-            ),
+            phone_number=PhoneNumber(schema.phone_number),
             address=Address(
                 street=schema.street,
                 city=schema.city,
@@ -173,17 +147,11 @@ def create_patient_views(
             ),
         )
 
-        patient = (
-            await update_patient_contact_information_use_case.execute(
-                command
-            )
-        )
+        patient = await update_patient_contact_information_use_case.execute(command)
 
         response = PatientResponse(
             id=patient.id,
-            medical_record_number=str(
-                patient.medical_record_number
-            ),
+            medical_record_number=str(patient.medical_record_number),
             name=str(patient.name),
             email=str(patient.email),
             phone_number=str(patient.phone_number),

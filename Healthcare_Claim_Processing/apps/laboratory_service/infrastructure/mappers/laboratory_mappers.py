@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 from uuid import UUID
 
@@ -39,9 +38,7 @@ class LaboratoryDataMapper:
 
         if specimen_orm is not None:
             if specimen_orm.collected_at is None:
-                raise ValueError(
-                    f"Specimen {specimen_orm.id} has no collection timestamp."
-                )
+                raise ValueError(f"Specimen {specimen_orm.id} has no collection timestamp.")
 
             specimen_domain = Specimen(
                 specimen_id=specimen_orm.id,

@@ -14,6 +14,4 @@ class ToolArgument:
     def __post_init__(self):
 
         if not self.name.strip():
-            raise ValueError(
-                "Argument name cannot be empty."
-            )
+            raise ValueError("Argument name cannot be empty.")

@@ -1,16 +1,16 @@
 # apps/laboratory/tests/domain/test_laboratory_order_aggregate.py
 
 import uuid
+
 import pytest
 
-from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
-from apps.laboratory_service.domain.value_objects import SpecimenType, LabOrderStatus
 from apps.laboratory_service.domain.events import LabResultValidatedEvent
 from apps.laboratory_service.domain.exceptions import MissingTestResultsException
+from apps.laboratory_service.domain.models import LaboratoryOrderAggregate
+from apps.laboratory_service.domain.value_objects import LabOrderStatus, SpecimenType
 
 
 class TestLaboratoryOrderAggregateValidation:
-
     @pytest.fixture
     def active_specimen_order(self) -> LaboratoryOrderAggregate:
         """Fixture providing a fresh Lab Order with a collected specimen."""
@@ -20,10 +20,7 @@ class TestLaboratoryOrderAggregateValidation:
             encounter_id=uuid.uuid4(),
             ordering_physician_id=uuid.uuid4(),
         )
-        order.collect_specimen(
-            specimen_type=SpecimenType.BLOOD, 
-            barcode="LAB-998822"
-        )
+        order.collect_specimen(specimen_type=SpecimenType.BLOOD, barcode="LAB-998822")
         # Clear setup events so assertions focus strictly on the test action
         order.clear_domain_events()
         return order
@@ -44,10 +41,7 @@ class TestLaboratoryOrderAggregateValidation:
         # Arrange
         pathologist_id = uuid.uuid4()
         active_specimen_order.attach_result(
-            test_code="CBC", 
-            value="14.2", 
-            unit="g/dL", 
-            reference_range="12.0-16.0"
+            test_code="CBC", value="14.2", unit="g/dL", reference_range="12.0-16.0"
         )
         active_specimen_order.clear_domain_events()
 
@@ -60,7 +54,7 @@ class TestLaboratoryOrderAggregateValidation:
         # Assert Domain Event Emission
         assert len(active_specimen_order.domain_events) == 1
         event = active_specimen_order.domain_events[0]
-        
+
         assert isinstance(event, LabResultValidatedEvent)
         assert event.order_id == str(active_specimen_order.id)
         assert event.validated_by == str(pathologist_id)

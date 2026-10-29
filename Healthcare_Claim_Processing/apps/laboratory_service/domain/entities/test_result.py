@@ -4,17 +4,17 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from apps.laboratory_service.domain.value_objects import ResultStatus, LabTestCode
 from apps.laboratory_service.domain.exceptions import (
-    InvalidResultDataException,
     IllegalResultStateTransitionException,
+    InvalidResultDataException,
 )
+from apps.laboratory_service.domain.value_objects import LabTestCode, ResultStatus
 
 
 class TestResult:
     """
     Domain Entity representing the quantitative/qualitative output of a lab test.
-    
+
     Guarantees clinical state machine invariants:
     - Results cannot be finalized without a valid non-empty value and valid pathologist UUID.
     - Finalized results cannot be re-finalized without going through explicit amendment flows.
@@ -66,7 +66,7 @@ class TestResult:
     def mark_as_final(self, pathologist_id: uuid.UUID) -> None:
         """
         Transitions result status to FINAL when validated by an authorized pathologist.
-        
+
         Enforces clinical invariants:
         1. Result must not already be in FINAL or CANCELLED status.
         2. Pathologist ID must be a valid UUID.
@@ -83,7 +83,9 @@ class TestResult:
             )
 
         if not isinstance(pathologist_id, uuid.UUID):
-            raise InvalidResultDataException("Valid pathologist UUID is required for result validation.")
+            raise InvalidResultDataException(
+                "Valid pathologist UUID is required for result validation."
+            )
 
         if not self.value:
             raise InvalidResultDataException("Cannot finalize a test result with an empty value.")
@@ -95,7 +97,7 @@ class TestResult:
     def _validate_initial_invariants(self, result_id: uuid.UUID, value: str) -> None:
         if not isinstance(result_id, uuid.UUID):
             raise InvalidResultDataException("Result ID must be a valid UUID instance.")
-            
+
         if value is None or not str(value).strip():
             raise InvalidResultDataException("Test result value cannot be null or empty string.")
 

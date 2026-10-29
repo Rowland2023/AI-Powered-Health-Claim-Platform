@@ -10,7 +10,6 @@ from patient.domain.value_objects.medical_record_number import (
 )
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
-
 from patient.infrastructure.persistence.mappers.patient_mapper import (
     PatientMapper,
 )
@@ -18,21 +17,15 @@ from patient.infrastructure.persistence.mappers.patient_mapper import (
 
 def make_patient() -> Patient:
     return Patient.register(
-        medical_record_number=MedicalRecordNumber(
-            "MRN-MAPPER-001"
-        ),
+        medical_record_number=MedicalRecordNumber("MRN-MAPPER-001"),
         name=PatientName(
             first_name="John",
             last_name="Doe",
         ),
         email=Email("john@example.com"),
-        phone_number=PhoneNumber(
-            "+2348012345678"
-        ),
+        phone_number=PhoneNumber("+2348012345678"),
         gender=Gender.MALE,
-        date_of_birth=DateOfBirth(
-            date(1990, 1, 1)
-        ),
+        date_of_birth=DateOfBirth(date(1990, 1, 1)),
         address=Address(
             street="12 Allen Avenue",
             city="Ikeja",
@@ -49,10 +42,7 @@ def test_patient_maps_to_model() -> None:
     model = PatientMapper.to_model(patient)
 
     assert model.id == patient.id
-    assert (
-        model.medical_record_number
-        == patient.medical_record_number.value
-    )
+    assert model.medical_record_number == patient.medical_record_number.value
     assert model.first_name == patient.name.first_name
     assert model.last_name == patient.name.last_name
     assert model.email == patient.email.value
@@ -76,34 +66,19 @@ def test_patient_model_maps_back_to_domain() -> None:
 
     assert restored.id == patient.id
 
-    assert (
-        restored.medical_record_number.value
-        == patient.medical_record_number.value
-    )
+    assert restored.medical_record_number.value == patient.medical_record_number.value
 
-    assert (
-        restored.name.first_name
-        == patient.name.first_name
-    )
+    assert restored.name.first_name == patient.name.first_name
 
-    assert (
-        restored.name.last_name
-        == patient.name.last_name
-    )
+    assert restored.name.last_name == patient.name.last_name
 
     assert restored.email.value == patient.email.value
 
-    assert (
-        restored.phone_number.value
-        == patient.phone_number.value
-    )
+    assert restored.phone_number.value == patient.phone_number.value
 
     assert restored.gender == patient.gender
 
-    assert (
-        restored.date_of_birth.value
-        == patient.date_of_birth.value
-    )
+    assert restored.date_of_birth.value == patient.date_of_birth.value
 
     assert restored.address == patient.address
 

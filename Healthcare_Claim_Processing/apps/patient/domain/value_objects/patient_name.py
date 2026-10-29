@@ -28,14 +28,10 @@ class PatientName:
             raise ValueError("Patient last name cannot be empty.")
 
         if len(first_name) > 100:
-            raise ValueError(
-                "Patient first name cannot exceed 100 characters."
-            )
+            raise ValueError("Patient first name cannot exceed 100 characters.")
 
         if len(last_name) > 100:
-            raise ValueError(
-                "Patient last name cannot exceed 100 characters."
-            )
+            raise ValueError("Patient last name cannot exceed 100 characters.")
 
         object.__setattr__(self, "first_name", first_name)
         object.__setattr__(self, "last_name", last_name)

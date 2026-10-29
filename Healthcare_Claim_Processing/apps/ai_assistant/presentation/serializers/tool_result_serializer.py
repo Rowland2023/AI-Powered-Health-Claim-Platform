@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class ToolResultSerializer(BaseModel):
-
     success: bool
 
     message: str | None = None

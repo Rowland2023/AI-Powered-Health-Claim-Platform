@@ -1,11 +1,10 @@
-
 from __future__ import annotations
 
 from typing import Any
 
-from .tool import Tool
 from ..domain.tool_definition import ToolDefinition
 from ..domain.tool_parameter import ToolParameter
+from .tool import Tool
 
 
 class FindPatientTool(Tool):
@@ -40,6 +39,4 @@ class FindPatientTool(Tool):
         self,
         **kwargs: Any,
     ):
-        return await self._find_patient_use_case.execute(
-            kwargs["patient_identifier"]
-        )
+        return await self._find_patient_use_case.execute(kwargs["patient_identifier"])

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from uuid import UUID
@@ -14,7 +13,6 @@ from patient.domain.entities.patient import Patient
 from patient.domain.value_objects.medical_record_number import (
     MedicalRecordNumber,
 )
-
 from patient.infrastructure.persistence.mappers.patient_mapper import (
     PatientMapper,
 )
@@ -79,10 +77,7 @@ class SQLAlchemyPatientRepository(PatientRepository):
 
         statement = (
             select(PatientModel)
-            .where(
-                PatientModel.medical_record_number
-                == medical_record_number.value
-            )
+            .where(PatientModel.medical_record_number == medical_record_number.value)
             .options(
                 selectinload(PatientModel.insurance_policy),
                 selectinload(PatientModel.emergency_contacts),
@@ -147,17 +142,13 @@ class SQLAlchemyPatientRepository(PatientRepository):
         model = result.scalar_one_or_none()
 
         if model is None:
-            raise ValueError(
-                f"Patient {patient.id} was not found."
-            )
+            raise ValueError(f"Patient {patient.id} was not found.")
 
         # -----------------------------------------------------
         # Patient fields
         # -----------------------------------------------------
 
-        model.medical_record_number = (
-            patient.medical_record_number.value
-        )
+        model.medical_record_number = patient.medical_record_number.value
 
         model.first_name = patient.name.first_name
         model.last_name = patient.name.last_name

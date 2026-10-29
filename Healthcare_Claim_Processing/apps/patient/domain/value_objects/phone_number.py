@@ -3,13 +3,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
-
-_PHONE_PATTERN = re.compile(
-    r"^\+?[1-9]\d{6,14}$"
-)
+_PHONE_PATTERN = re.compile(r"^\+?[1-9]\d{6,14}$")
 
 
 @dataclass(frozen=True)
@@ -25,23 +22,14 @@ class PhoneNumber:
 
     def __post_init__(self) -> None:
         normalized = (
-            self.value
-            .strip()
-            .replace(" ", "")
-            .replace("-", "")
-            .replace("(", "")
-            .replace(")", "")
+            self.value.strip().replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
         )
 
         if not normalized:
-            raise ValueError(
-                "Phone number cannot be empty."
-            )
+            raise ValueError("Phone number cannot be empty.")
 
         if not _PHONE_PATTERN.fullmatch(normalized):
-            raise ValueError(
-                f"Invalid phone number: {self.value}"
-            )
+            raise ValueError(f"Invalid phone number: {self.value}")
 
         object.__setattr__(
             self,

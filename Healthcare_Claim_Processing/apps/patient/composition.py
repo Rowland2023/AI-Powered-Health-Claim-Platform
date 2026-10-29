@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from shared.infrastructure.database.session import SessionFactory
+
 from patient.application.use_cases.register_patient import (
     RegisterPatientUseCase,
 )
@@ -12,7 +14,6 @@ from patient.infrastructure.persistence.sqlalchemy_unit_of_work import (
 from patient.presentation.http.controllers.patient_controller import (
     PatientController,
 )
-from shared.infrastructure.database.session import SessionFactory
 
 
 def create_patient_uow() -> SQLAlchemyUnitOfWork:
@@ -30,17 +31,13 @@ def create_patient_dependencies() -> dict:
         uow=create_patient_uow(),
     )
 
-    update_patient_contact_information_use_case = (
-        UpdatePatientContactInformationUseCase(
-            uow=create_patient_uow(),
-        )
+    update_patient_contact_information_use_case = UpdatePatientContactInformationUseCase(
+        uow=create_patient_uow(),
     )
 
     patient_controller = PatientController(
         register_patient_use_case=register_patient_use_case,
-        update_patient_contact_information_use_case=(
-            update_patient_contact_information_use_case
-        ),
+        update_patient_contact_information_use_case=(update_patient_contact_information_use_case),
     )
 
     return {

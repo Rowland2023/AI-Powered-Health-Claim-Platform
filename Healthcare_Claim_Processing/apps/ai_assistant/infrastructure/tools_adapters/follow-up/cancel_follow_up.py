@@ -17,14 +17,7 @@ class CancelFollowUpTool(Tool):
     @property
     def parameters(self):
 
-        return [
-
-            ToolParameter(
-                "appointment_id",
-                "uuid",
-                "Follow-up appointment identifier"
-            )
-        ]
+        return [ToolParameter("appointment_id", "uuid", "Follow-up appointment identifier")]
 
     def execute(self, **kwargs):
         raise NotImplementedError

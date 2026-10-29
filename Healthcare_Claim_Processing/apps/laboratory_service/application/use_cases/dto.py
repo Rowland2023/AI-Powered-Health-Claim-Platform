@@ -2,17 +2,17 @@
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime
 from typing import List, Optional
-
 
 # =============================================================================
 # Input DTOs (Command Requests)
 # =============================================================================
 
+
 @dataclass(frozen=True)
 class CreateOrderInputDTO:
     """Input payload for creating a new laboratory order."""
+
     patient_id: uuid.UUID
     encounter_id: uuid.UUID
     ordering_physician_id: uuid.UUID
@@ -22,6 +22,7 @@ class CreateOrderInputDTO:
 @dataclass(frozen=True)
 class CollectSpecimenInputDTO:
     """Input payload for recording physical specimen collection."""
+
     order_id: uuid.UUID
     specimen_type: str  # Matches SpecimenType enum e.g., "BLOOD"
     barcode: str
@@ -37,6 +38,7 @@ class CollectSpecimenInputDTO:
 @dataclass(frozen=True)
 class AttachResultInputDTO:
     """Input payload for attaching diagnostic test measurements."""
+
     order_id: uuid.UUID
     test_code: str
     test_name: str
@@ -54,6 +56,7 @@ class AttachResultInputDTO:
 @dataclass(frozen=True)
 class ValidateResultInputDTO:
     """Input payload for pathologist validation and final sign-off."""
+
     order_id: uuid.UUID
     pathologist_id: uuid.UUID
 
@@ -62,9 +65,11 @@ class ValidateResultInputDTO:
 # Output DTOs (Read Models / Responses)
 # =============================================================================
 
+
 @dataclass(frozen=True)
 class SpecimenOutputDTO:
     """Read representation of an attached specimen."""
+
     specimen_id: uuid.UUID
     specimen_type: str
     barcode: str
@@ -74,6 +79,7 @@ class SpecimenOutputDTO:
 @dataclass(frozen=True)
 class TestResultOutputDTO:
     """Read representation of an attached diagnostic test result."""
+
     result_id: uuid.UUID
     test_code: str
     test_name: str
@@ -88,6 +94,7 @@ class TestResultOutputDTO:
 @dataclass(frozen=True)
 class LaboratoryOrderOutputDTO:
     """Read representation of the entire laboratory order aggregate."""
+
     order_id: uuid.UUID
     patient_id: uuid.UUID
     encounter_id: uuid.UUID

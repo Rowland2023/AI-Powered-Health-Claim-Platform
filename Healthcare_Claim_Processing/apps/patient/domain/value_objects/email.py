@@ -3,9 +3,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
-
+from dataclasses import dataclass
 
 _EMAIL_PATTERN = re.compile(
     r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+"
@@ -31,14 +30,10 @@ class Email:
             raise ValueError("Email address cannot be empty.")
 
         if len(normalized) > 254:
-            raise ValueError(
-                "Email address cannot exceed 254 characters."
-            )
+            raise ValueError("Email address cannot exceed 254 characters.")
 
         if not _EMAIL_PATTERN.fullmatch(normalized):
-            raise ValueError(
-                f"Invalid email address: {self.value}"
-            )
+            raise ValueError(f"Invalid email address: {self.value}")
 
         object.__setattr__(self, "value", normalized)
 

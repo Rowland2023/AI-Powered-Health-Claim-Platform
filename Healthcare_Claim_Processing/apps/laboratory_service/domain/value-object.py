@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Set
+
 
 @dataclass
 class LabOrder:
@@ -10,7 +12,7 @@ class LabOrder:
     test_codes: List[LabTestCode]
     specimen_type: SpecimenType
     status: LabOrderStatus = LabOrderStatus.REQUESTED
-    
+
     # Store results mapped by test_code string to prevent duplicate list entries
     _results: Dict[str, LabResult] = field(default_factory=dict)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
@@ -28,14 +30,16 @@ class LabOrder:
         # 1. Verify the test code belongs to this order
         ordered_codes: Set[str] = {c.code for c in self.test_codes}
         if result.test_code.code not in ordered_codes:
-            raise ValueError(f"Test code '{result.test_code.code}' is not part of LabOrder {self.order_id}")
+            raise ValueError(
+                f"Test code '{result.test_code.code}' is not part of LabOrder {self.order_id}"
+            )
 
         # 2. Guard state transitions (Allow amendments even if currently RESULTED or VALIDATED for corrections)
         allowed_statuses = {
             LabOrderStatus.SPECIMEN_COLLECTED,
             LabOrderStatus.PROCESSING,
             LabOrderStatus.RESULTED,
-            LabOrderStatus.VALIDATED  # Allowed for CORRECTED result status
+            LabOrderStatus.VALIDATED,  # Allowed for CORRECTED result status
         }
         if self.status not in allowed_statuses:
             raise ValueError(f"Cannot add result to order in status '{self.status.value}'")
@@ -62,12 +66,15 @@ class LabOrder:
         """
         ordered_codes: Set[str] = {c.code for c in self.test_codes}
         completed_codes: Set[str] = {
-            code for code, res in self._results.items()
+            code
+            for code, res in self._results.items()
             if res.status in {ResultStatus.FINAL, ResultStatus.CORRECTED}
         }
 
         missing = ordered_codes - completed_codes
         if missing:
-            raise ValueError(f"Cannot validate order. Missing FINAL/CORRECTED results for: {missing}")
+            raise ValueError(
+                f"Cannot validate order. Missing FINAL/CORRECTED results for: {missing}"
+            )
 
         self.status = LabOrderStatus.VALIDATED

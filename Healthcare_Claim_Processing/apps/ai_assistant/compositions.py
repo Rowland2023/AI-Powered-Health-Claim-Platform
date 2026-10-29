@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +11,6 @@ from ai_assistant.application.services.llm_service import (
 from ai_assistant.application.services.tool_execution_service import (
     ToolExecutionService,
 )
-
 from ai_assistant.application.use_cases.execute_ai_request import (
     ExecuteAIRequestUseCase,
 )
@@ -28,25 +26,19 @@ from ai_assistant.application.use_cases.list_tools import (
 from ai_assistant.application.use_cases.summarize_conversation import (
     SummarizeConversationUseCase,
 )
-
 from ai_assistant.domain.tool_registry import ToolRegistry
-
 from ai_assistant.infrastructure.llm.openai_client import (
     OpenAIClient,
 )
-
 from ai_assistant.infrastructure.persistence.repositories.postgres_conversation_repository import (
     PostgresConversationRepository,
 )
-
 from ai_assistant.infrastructure.services.postgres_conversation_service import (
     PostgresConversationService,
 )
-
 from ai_assistant.presentation.http.controllers.ai_assistant_controller import (
     AIController,
 )
-
 from ai_assistant.presentation.http.presenters.ai_response_presenter import (
     AIResponsePresenter,
 )
@@ -56,12 +48,11 @@ from ai_assistant.presentation.http.presenters.conversation_presenter import (
 from ai_assistant.presentation.http.presenters.tool_presenter import (
     ToolPresenter,
 )
-
-from ai_assistant.tools.patient.register_patient_tool import (
-    RegisterPatientTool,
-)
 from ai_assistant.tools.patient.find_patient_tool import (
     FindPatientTool,
+)
+from ai_assistant.tools.patient.register_patient_tool import (
+    RegisterPatientTool,
 )
 
 
@@ -96,16 +87,12 @@ def create_ai_assistant_dependencies(
     # INFRASTRUCTURE
     # =========================================================
 
-    conversation_repository = (
-        PostgresConversationRepository(
-            session=session,
-        )
+    conversation_repository = PostgresConversationRepository(
+        session=session,
     )
 
-    conversation_service: ConversationService = (
-        PostgresConversationService(
-            repository=conversation_repository,
-        )
+    conversation_service: ConversationService = PostgresConversationService(
+        repository=conversation_repository,
     )
 
     llm_service: LLMService = OpenAIClient(
@@ -195,23 +182,19 @@ def create_ai_assistant_dependencies(
         "conversation_repository": conversation_repository,
         "conversation_service": conversation_service,
         "llm_service": llm_service,
-
         # Tools
         "tool_registry": tool_registry,
         "tool_execution_service": tool_execution_service,
-
         # Use cases
         "execute_ai_request": execute_ai_request,
         "execute_tool_call": execute_tool_call,
         "list_tools": list_tools,
         "explain_tool": explain_tool,
         "summarize_conversation": summarize_conversation,
-
         # Presenters
         "ai_response_presenter": ai_response_presenter,
         "conversation_presenter": conversation_presenter,
         "tool_presenter": tool_presenter,
-
         # Presentation
         "controller": controller,
     }

@@ -1,7 +1,6 @@
 from uuid import uuid4
 
 from django.urls import resolve
-
 from patient.presentation.http.urls import (
     register_patient,
     update_patient_contact_information,

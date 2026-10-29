@@ -17,6 +17,7 @@ class ValidateLabResultInputSerializer(serializers.Serializer):
     The pathologist is resolved from the authenticated account.
     Never accept pathologist_id from the request body.
     """
+
     pass
 
 

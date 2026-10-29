@@ -1,8 +1,6 @@
-
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-
 from uuid import UUID
 
 from patient.domain.entities.patient import Patient

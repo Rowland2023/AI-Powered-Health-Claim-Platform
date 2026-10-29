@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -7,7 +6,6 @@ from typing import Any
 from ai_assistant.application.commands.execute_prompt import (
     ExecutePromptCommand,
 )
-
 from ai_assistant.application.dto.ai_response_dto import (
     AIResponseDTO,
 )

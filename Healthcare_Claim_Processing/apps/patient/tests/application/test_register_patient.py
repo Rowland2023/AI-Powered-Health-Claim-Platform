@@ -4,14 +4,13 @@ from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID
 
 import pytest
-
 from patient.application.commands.register_patient import (
     RegisterPatientCommand,
 )
+from patient.application.unit_of_work import UnitOfWork
 from patient.application.use_cases.register_patient import (
     RegisterPatientUseCase,
 )
-from patient.application.unit_of_work import UnitOfWork
 from patient.domain.entities.patient import Patient
 from patient.domain.events.patient_registered import PatientRegistered
 from patient.domain.value_objects.address import Address
@@ -35,9 +34,7 @@ def make_command() -> RegisterPatientCommand:
         email=Email("john@example.com"),
         phone_number=PhoneNumber("+2348012345678"),
         gender=Gender.MALE,
-        date_of_birth=DateOfBirth.from_date(
-            __import__("datetime").date(1990, 1, 1)
-        ),
+        date_of_birth=DateOfBirth.from_date(__import__("datetime").date(1990, 1, 1)),
         address=Address(
             street="12 Allen Avenue",
             city="Ikeja",
@@ -54,9 +51,7 @@ def make_uow() -> MagicMock:
     uow.patient_repository = MagicMock()
     uow.outbox_repository = MagicMock()
 
-    uow.patient_repository.get_by_medical_record_number = AsyncMock(
-        return_value=None
-    )
+    uow.patient_repository.get_by_medical_record_number = AsyncMock(return_value=None)
 
     uow.patient_repository.add = AsyncMock()
 
@@ -155,9 +150,7 @@ async def test_register_patient_rejects_duplicate_medical_record_number() -> Non
 
     existing_patient = MagicMock(spec=Patient)
 
-    uow.patient_repository.get_by_medical_record_number = AsyncMock(
-        return_value=existing_patient
-    )
+    uow.patient_repository.get_by_medical_record_number = AsyncMock(return_value=existing_patient)
 
     use_case = RegisterPatientUseCase(uow)
 
@@ -175,9 +168,7 @@ async def test_register_patient_rejects_duplicate_medical_record_number() -> Non
 async def test_register_patient_rolls_back_when_application_fails() -> None:
     uow = make_uow()
 
-    uow.patient_repository.add = AsyncMock(
-        side_effect=RuntimeError("database failure")
-    )
+    uow.patient_repository.add = AsyncMock(side_effect=RuntimeError("database failure"))
 
     use_case = RegisterPatientUseCase(uow)
 

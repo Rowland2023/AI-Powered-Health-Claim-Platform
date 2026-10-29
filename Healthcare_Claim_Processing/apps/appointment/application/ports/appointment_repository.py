@@ -7,7 +7,6 @@ from appointment.domain.entities.appointment import Appointment
 
 
 class AppointmentRepository(ABC):
-
     @abstractmethod
     async def add(self, appointment: Appointment) -> None:
         """Persist a new appointment."""

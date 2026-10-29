@@ -8,10 +8,9 @@ Create Date: 2026-08-10 16:30:41.312112
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
-
 
 # revision identifiers, used by Alembic.
 
@@ -26,70 +25,59 @@ def upgrade() -> None:
 
     op.create_table(
         "outbox_events",
-
         sa.Column(
             "id",
             sa.Integer(),
             autoincrement=True,
             nullable=False,
         ),
-
         sa.Column(
             "event_id",
             postgresql.UUID(as_uuid=False),
             nullable=False,
         ),
-
         sa.Column(
             "event_name",
             sa.String(length=255),
             nullable=False,
         ),
-
         sa.Column(
             "aggregate_id",
             postgresql.UUID(as_uuid=False),
             nullable=False,
         ),
-
         sa.Column(
             "event_version",
             sa.Integer(),
             nullable=False,
             server_default="1",
         ),
-
         sa.Column(
             "occurred_at",
             sa.DateTime(timezone=True),
             nullable=False,
         ),
-
         sa.Column(
             "correlation_id",
             sa.String(length=255),
             nullable=True,
         ),
-
         sa.Column(
             "causation_id",
             sa.String(length=255),
             nullable=True,
         ),
-
         sa.Column(
             "payload",
             postgresql.JSONB(),
             nullable=False,
         ),
-
         sa.Column(
             "status",
             sa.String(length=50),
             nullable=False,
             server_default="pending",
         ),
-
         sa.PrimaryKeyConstraint("id"),
     )
 

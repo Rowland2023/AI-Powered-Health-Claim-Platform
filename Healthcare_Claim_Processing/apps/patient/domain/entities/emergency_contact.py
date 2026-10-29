@@ -40,15 +40,10 @@ class EmergencyContact:
         relationship = relationship.strip()
 
         if not relationship:
-            raise ValueError(
-                "Emergency contact relationship cannot be empty."
-            )
+            raise ValueError("Emergency contact relationship cannot be empty.")
 
         if len(relationship) > 100:
-            raise ValueError(
-                "Emergency contact relationship cannot exceed "
-                "100 characters."
-            )
+            raise ValueError("Emergency contact relationship cannot exceed 100 characters.")
 
         return cls(
             id=uuid4(),

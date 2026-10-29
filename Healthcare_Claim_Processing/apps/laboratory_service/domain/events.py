@@ -1,7 +1,7 @@
 # apps/laboratory/domain/events.py
 
 import uuid
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from typing import Any, Dict, Union
 
@@ -9,6 +9,7 @@ from typing import Any, Dict, Union
 @dataclass(frozen=True)
 class DomainEvent:
     """Base class for all domain events across the laboratory context."""
+
     event_id: str
     occurred_at: str
 
@@ -28,13 +29,13 @@ class DomainEvent:
 
     def to_envelope(self) -> Dict[str, Any]:
         """
-        Structures the event into a standard Event Envelope format 
+        Structures the event into a standard Event Envelope format
         (matching CloudEvents / Outbox consumer expectations).
         """
         data = asdict(self)
         event_id = data.pop("event_id")
         occurred_at = data.pop("occurred_at")
-        
+
         return {
             "event_id": event_id,
             "event_type": self.event_type,

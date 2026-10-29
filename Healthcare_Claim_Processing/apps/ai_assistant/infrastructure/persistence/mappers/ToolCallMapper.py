@@ -9,24 +9,17 @@ from ..models.tool_call_model import ToolCallModel
 
 
 class ToolCallMapper:
-
     @staticmethod
     def to_model(
         tool_call: ToolCall,
         conversation_id,
     ) -> ToolCallModel:
 
-        arguments = json.dumps(
-            {
-                arg.name: arg.value
-                for arg in tool_call.arguments
-            }
-        )
+        arguments = json.dumps({arg.name: arg.value for arg in tool_call.arguments})
 
         result = None
 
         if tool_call.result:
-
             result = json.dumps(
                 {
                     "success": tool_call.result.success,
@@ -57,7 +50,6 @@ class ToolCallMapper:
         payload = json.loads(model.arguments_json)
 
         for key, value in payload.items():
-
             arguments.append(
                 ToolArgument(
                     key,
@@ -68,7 +60,6 @@ class ToolCallMapper:
         result = None
 
         if model.result_json:
-
             data = json.loads(model.result_json)
 
             result = ToolResult(

@@ -7,12 +7,9 @@ from ai_assistant.presentation.http.views import (
     create_ai_views,
 )
 
-
 dependencies = create_ai_dependencies()
 
-views = create_ai_views(
-    dependencies["ai_controller"]
-)
+views = create_ai_views(dependencies["ai_controller"])
 
 
 app_name = "ai_assistant"

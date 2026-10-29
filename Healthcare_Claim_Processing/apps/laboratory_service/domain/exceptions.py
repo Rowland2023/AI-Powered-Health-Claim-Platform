@@ -6,9 +6,10 @@ from typing import Any, Dict, Optional
 class LaboratoryDomainException(Exception):
     """
     Base exception for all business rule violations in the Laboratory domain.
-    
+
     Provides structured error codes and detail dictionaries for upstream API/Logging integration.
     """
+
     code: str = "LABORATORY_DOMAIN_ERROR"
 
     def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
@@ -32,15 +33,17 @@ class LaboratoryDomainException(Exception):
 # Aggregate & State Machine Exceptions
 # -----------------------------------------------------------------------------
 
+
 class InvalidLabOrderStatusTransitionException(LaboratoryDomainException):
     """Raised when an action is attempted on a lab order in an incompatible status."""
+
     code = "INVALID_ORDER_STATUS_TRANSITION"
 
     def __init__(self, current_status: str, action: str, order_id: Optional[str] = None):
         self.current_status = current_status
         self.action = action
         self.order_id = order_id
-        
+
         msg = f"Cannot perform '{action}' on lab order"
         if order_id:
             msg += f" '{order_id}'"
@@ -58,11 +61,13 @@ class InvalidLabOrderStatusTransitionException(LaboratoryDomainException):
 
 class InvalidOrderStateException(LaboratoryDomainException):
     """Raised when an order is in an invalid state for a requested operation."""
+
     code = "INVALID_ORDER_STATE"
 
 
 class OrderNotFoundException(LaboratoryDomainException):
     """Raised when a requested lab order aggregate cannot be found."""
+
     code = "ORDER_NOT_FOUND"
 
     def __init__(self, order_id: str):
@@ -77,19 +82,23 @@ class OrderNotFoundException(LaboratoryDomainException):
 # Specimen Invariant Exceptions
 # -----------------------------------------------------------------------------
 
+
 class SpecimenCollectionException(LaboratoryDomainException):
     """Raised when specimen collection constraints fail (e.g., invalid barcode or state)."""
+
     code = "SPECIMEN_COLLECTION_FAILED"
 
 
 class InvalidSpecimenDataException(LaboratoryDomainException):
     """Raised when specimen attributes fail entity invariants (e.g. empty barcode)."""
+
     code = "INVALID_SPECIMEN_DATA"
 
 
 # -----------------------------------------------------------------------------
 # Diagnostic Test Result Invariant Exceptions
 # -----------------------------------------------------------------------------
+
 
 class MissingTestResultsException(LaboratoryDomainException):
     """Raised when attempting to validate or finalize an order without attached results."""
@@ -103,14 +112,18 @@ class MissingTestResultsException(LaboratoryDomainException):
             details={"order_id": order_id},
         )
 
+
 class InvalidResultDataException(LaboratoryDomainException):
     """Raised when a test result fails quantitative/qualitative data invariants."""
+
     code = "INVALID_RESULT_DATA"
 
 
 class IllegalResultStateTransitionException(LaboratoryDomainException):
     """Raised when attempting illegal state changes on a TestResult entity (e.g., re-finalizing)."""
+
     code = "ILLEGAL_RESULT_STATE_TRANSITION"
+
 
 class RepositoryPersistenceException(LaboratoryDomainException):
     """Raised when laboratory aggregate persistence fails."""

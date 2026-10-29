@@ -1,7 +1,5 @@
 from uuid import uuid4
 
-import pytest
-
 from appointment.domain.value_objects.appointment_type import AppointmentType
 from appointment.presentation.serializers.appointment_serializer import (
     ScheduleAppointmentSerializer,

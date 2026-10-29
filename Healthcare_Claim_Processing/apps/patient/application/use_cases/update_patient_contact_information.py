@@ -1,11 +1,9 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from uuid import UUID
 
 from patient.application.unit_of_work import UnitOfWork
-
 from patient.domain.entities.patient import Patient
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.email import Email
@@ -45,20 +43,14 @@ class UpdatePatientContactInformationUseCase:
     ) -> Patient:
 
         async with self._uow as uow:
-
             # -------------------------------------------------
             # 1. Load aggregate
             # -------------------------------------------------
 
-            patient = await (
-                uow.patient_repository
-                .get_by_id(command.patient_id)
-            )
+            patient = await uow.patient_repository.get_by_id(command.patient_id)
 
             if patient is None:
-                raise ValueError(
-                    f"Patient {command.patient_id} was not found."
-                )
+                raise ValueError(f"Patient {command.patient_id} was not found.")
 
             # -------------------------------------------------
             # 2. Ask aggregate to perform the business change

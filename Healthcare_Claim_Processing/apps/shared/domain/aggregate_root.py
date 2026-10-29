@@ -1,11 +1,9 @@
-
 from __future__ import annotations
 
 from abc import ABC
 from typing import Generic, TypeVar
 
 from shared.domain.domain_event import DomainEvent
-
 
 TEvent = TypeVar("TEvent", bound=DomainEvent)
 

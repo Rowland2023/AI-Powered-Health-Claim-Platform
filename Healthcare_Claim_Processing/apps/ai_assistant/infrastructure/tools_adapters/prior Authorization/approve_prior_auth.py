@@ -17,14 +17,7 @@ class ApprovePriorAuthorizationTool(Tool):
     @property
     def parameters(self):
 
-        return [
-
-            ToolParameter(
-                "prior_authorization_id",
-                "uuid",
-                "Prior authorization identifier"
-            )
-        ]
+        return [ToolParameter("prior_authorization_id", "uuid", "Prior authorization identifier")]
 
     def execute(self, **kwargs):
         raise NotImplementedError

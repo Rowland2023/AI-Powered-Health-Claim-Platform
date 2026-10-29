@@ -18,18 +18,8 @@ class RejectPriorAuthorizationTool(Tool):
     def parameters(self):
 
         return [
-
-            ToolParameter(
-                "prior_authorization_id",
-                "uuid",
-                "Prior authorization identifier"
-            ),
-
-            ToolParameter(
-                "reason",
-                "string",
-                "Reason for rejection"
-            )
+            ToolParameter("prior_authorization_id", "uuid", "Prior authorization identifier"),
+            ToolParameter("reason", "string", "Reason for rejection"),
         ]
 
     def execute(self, **kwargs):

@@ -1,8 +1,7 @@
-from fastapi import HTTPException, Request
+from fastapi import Request
 
 
 class AuthenticationMiddleware:
-
     async def __call__(
         self,
         request: Request,

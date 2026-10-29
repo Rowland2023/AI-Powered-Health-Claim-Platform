@@ -1,7 +1,6 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from appointment.infrastructure.persistence.repositories.sqlalchemy_appointment_repository import (
     SQLAlchemyAppointmentRepository,
 )
@@ -105,7 +104,8 @@ async def test_session_is_closed_after_exception(
 
     session.rollback.assert_awaited_once()
     session.close.assert_awaited_once()
-    
+
+
 @pytest.mark.asyncio
 async def test_register_tracks_aggregate():
     session_factory = MagicMock()

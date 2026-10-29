@@ -1,12 +1,12 @@
-
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
+from shared.ports.outbox_repository import OutboxRepository
+
 from patient.application.repositories.patient_repository import (
     PatientRepository,
 )
-from shared.ports.outbox_repository import OutboxRepository
 
 
 class UnitOfWork(ABC):

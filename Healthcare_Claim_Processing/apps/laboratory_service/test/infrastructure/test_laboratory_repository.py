@@ -176,6 +176,4 @@ def test_save_updates_existing_order_without_duplicating_it(
 
     assert LabOrderORMModel.objects.filter(id=order.id).count() == 1
     assert SpecimenORMModel.objects.filter(order_id=order.id).count() == 1
-    assert DiagnosticReportResultORMModel.objects.filter(
-        order_id=order.id
-    ).count() == 0
+    assert DiagnosticReportResultORMModel.objects.filter(order_id=order.id).count() == 0

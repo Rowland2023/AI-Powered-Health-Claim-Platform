@@ -5,11 +5,10 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from appointment.application.repositories.appointment_repository import (
+from appointment.application.ports.appointment_repository import (
     AppointmentRepository,
 )
-
-from appointment.application.ports.appointment_repository import (
+from appointment.application.repositories.appointment_repository import (
     AppointmentRepository,
 )
 from appointment.domain.entities.appointment import Appointment
@@ -55,9 +54,7 @@ class SQLAlchemyAppointmentRepository(AppointmentRepository):
         """
 
         result = await self.session.execute(
-            select(AppointmentModel).where(
-                AppointmentModel.id == appointment_id
-            )
+            select(AppointmentModel).where(AppointmentModel.id == appointment_id)
         )
 
         model = result.scalar_one_or_none()
@@ -81,9 +78,7 @@ class SQLAlchemyAppointmentRepository(AppointmentRepository):
         )
 
         if model is None:
-            raise ValueError(
-                f"Appointment {appointment.id} does not exist."
-            )
+            raise ValueError(f"Appointment {appointment.id} does not exist.")
 
         model.patient_id = appointment.patient_id
         model.provider_id = appointment.provider_id

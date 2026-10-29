@@ -6,4 +6,5 @@ class ListAvailableToolsQuery:
     """
     Retrieve all registered tools.
     """
+
     pass

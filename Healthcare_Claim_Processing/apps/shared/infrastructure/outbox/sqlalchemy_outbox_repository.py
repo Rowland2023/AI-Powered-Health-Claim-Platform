@@ -130,15 +130,9 @@ class SQLAlchemyOutboxRepository(OutboxRepository):
             event_version=event.event_version,
             occurred_at=event.occurred_at,
             correlation_id=(
-                str(event.correlation_id)
-                if event.correlation_id is not None
-                else None
+                str(event.correlation_id) if event.correlation_id is not None else None
             ),
-            causation_id=(
-                str(event.causation_id)
-                if event.causation_id is not None
-                else None
-            ),
+            causation_id=(str(event.causation_id) if event.causation_id is not None else None),
             payload=self._serialize_event(event),
             status="pending",
         )
@@ -170,15 +164,9 @@ class SQLAlchemyOutboxRepository(OutboxRepository):
                 event_version=event.event_version,
                 occurred_at=event.occurred_at,
                 correlation_id=(
-                    str(event.correlation_id)
-                    if event.correlation_id is not None
-                    else None
+                    str(event.correlation_id) if event.correlation_id is not None else None
                 ),
-                causation_id=(
-                    str(event.causation_id)
-                    if event.causation_id is not None
-                    else None
-                ),
+                causation_id=(str(event.causation_id) if event.causation_id is not None else None),
                 payload=self._serialize_event(event),
                 status="pending",
             )
@@ -218,17 +206,12 @@ class SQLAlchemyOutboxRepository(OutboxRepository):
 
         if isinstance(value, dict):
             return {
-                str(key): SQLAlchemyOutboxRepository._make_json_safe(
-                    item
-                )
+                str(key): SQLAlchemyOutboxRepository._make_json_safe(item)
                 for key, item in value.items()
             }
 
         if isinstance(value, (list, tuple)):
-            return [
-                SQLAlchemyOutboxRepository._make_json_safe(item)
-                for item in value
-            ]
+            return [SQLAlchemyOutboxRepository._make_json_safe(item) for item in value]
 
         if hasattr(value, "isoformat"):
             return value.isoformat()
@@ -239,10 +222,13 @@ class SQLAlchemyOutboxRepository(OutboxRepository):
             except Exception:
                 pass
 
-        if isinstance(
-            value,
-            (str, int, float, bool),
-        ) or value is None:
+        if (
+            isinstance(
+                value,
+                (str, int, float, bool),
+            )
+            or value is None
+        ):
             return value
 
         return str(value)

@@ -3,29 +3,28 @@
 import uuid
 from typing import Any, List, Optional, Union
 
+from apps.laboratory_service.domain.entities.specimen import Specimen
+from apps.laboratory_service.domain.entities.test_result import TestResult
 from apps.laboratory_service.domain.events import (
     LabOrderCreatedEvent,
     LabResultValidatedEvent,
     SpecimenCollectedEvent,
 )
-from apps.laboratory_service.domain.entities.specimen import Specimen
-from apps.laboratory_service.domain.entities.test_result import TestResult
+from apps.laboratory_service.domain.exceptions import (
+    InvalidOrderStateException,
+    MissingTestResultsException,
+)
 from apps.laboratory_service.domain.value_objects import (
     LabOrderStatus,
     LabTestCode,
     SpecimenType,
-)
-from apps.laboratory_service.domain.exceptions import (
-    InvalidOrderStateException,
-    InvalidResultDataException,
-    MissingTestResultsException,
 )
 
 
 class LaboratoryOrderAggregate:
     """
     Aggregate Root managing the entire laboratory workflow lifecycle.
-    
+
     Guarantees domain boundary integrity:
     - Encapsulates physical specimens and attached diagnostic test results.
     - Enforces state machine transitions: REQUESTED -> SPECIMEN_COLLECTED -> PROCESSING -> VALIDATED.
@@ -89,11 +88,7 @@ class LaboratoryOrderAggregate:
                 f"Cannot collect specimen for order '{self.id}' in status '{self.status}'."
             )
 
-        type_enum = (
-            SpecimenType(specimen_type)
-            if isinstance(specimen_type, str)
-            else specimen_type
-        )
+        type_enum = SpecimenType(specimen_type) if isinstance(specimen_type, str) else specimen_type
 
         # Delegate instantiation to Specimen factory to ensure invariant checks and timestamp defaults
         self.specimen = Specimen.create(
@@ -105,7 +100,9 @@ class LaboratoryOrderAggregate:
         event = SpecimenCollectedEvent.create(
             order_id=self.id,
             specimen_id=self.specimen.id,
-            specimen_type=self.specimen.type.value if hasattr(self.specimen.type, "value") else str(self.specimen.type),
+            specimen_type=self.specimen.type.value
+            if hasattr(self.specimen.type, "value")
+            else str(self.specimen.type),
             barcode=self.specimen.barcode,
         )
         self._record_event(event)
@@ -124,11 +121,7 @@ class LaboratoryOrderAggregate:
                 f"Specimen must be collected before results can be attached to order '{self.id}'."
             )
 
-        code_obj = (
-            LabTestCode(test_code)
-            if isinstance(test_code, str)
-            else test_code
-        )
+        code_obj = LabTestCode(test_code) if isinstance(test_code, str) else test_code
 
         # Delegate instantiation to TestResult entity factory
         result = TestResult.create(

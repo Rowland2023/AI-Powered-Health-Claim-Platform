@@ -1,4 +1,3 @@
-
 from .insurance_updated import InsuranceUpdated
 from .patient_deactivated import PatientDeactivated
 from .patient_registered import PatientRegistered

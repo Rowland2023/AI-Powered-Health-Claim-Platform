@@ -20,10 +20,7 @@ from apps.laboratory_service.infrastructure.orm.models import (
     SpecimenORMModel,
 )
 
-
-OutboxWriter = Callable[
-    [LaboratoryOrderAggregate, Sequence[object]], None
-]
+OutboxWriter = Callable[[LaboratoryOrderAggregate, Sequence[object]], None]
 
 
 class LaboratoryRepository(ILaboratoryRepository):

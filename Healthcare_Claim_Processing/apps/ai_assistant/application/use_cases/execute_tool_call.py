@@ -10,7 +10,6 @@ from ai_assistant.application.services.tool_execution_service import (
 
 
 class ExecuteToolCallUseCase:
-
     def __init__(
         self,
         tool_execution_service: ToolExecutionService,

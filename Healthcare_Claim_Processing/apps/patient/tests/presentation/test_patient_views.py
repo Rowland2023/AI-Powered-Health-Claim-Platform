@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import json
@@ -8,15 +7,14 @@ from uuid import uuid4
 
 import pytest
 from django.test import AsyncRequestFactory
-
 from patient.presentation.http.views import (
     create_patient_views,
 )
 
-
 # =========================================================
 # HELPERS
 # =========================================================
+
 
 def make_controller():
     controller = AsyncMock()
@@ -67,10 +65,7 @@ def patient_response_payload(
     country="NG",
 ) -> dict:
     return {
-        "id": str(
-            patient_id
-            or uuid4()
-        ),
+        "id": str(patient_id or uuid4()),
         "medical_record_number": "MRN-001",
         "name": "John Doe",
         "email": email,
@@ -81,13 +76,7 @@ def patient_response_payload(
             1,
             1,
         ),
-        "address": (
-            f"{street}, "
-            f"{city}, "
-            f"{state}, "
-            f"{postal_code}, "
-            f"{country}"
-        ),
+        "address": (f"{street}, {city}, {state}, {postal_code}, {country}"),
         "active": True,
     }
 
@@ -96,6 +85,7 @@ def patient_response_payload(
 # REGISTER PATIENT
 # =========================================================
 
+
 @pytest.mark.asyncio
 async def test_register_patient_view_returns_201() -> None:
     factory = AsyncRequestFactory()
@@ -103,29 +93,19 @@ async def test_register_patient_view_returns_201() -> None:
     controller = make_controller()
 
     patient_response = Mock()
-    patient_response.model_dump.return_value = (
-        patient_response_payload()
-    )
+    patient_response.model_dump.return_value = patient_response_payload()
 
-    controller.register_patient.return_value = (
-        patient_response
-    )
+    controller.register_patient.return_value = patient_response
 
-    register_view, _ = create_patient_views(
-        controller
-    )
+    register_view, _ = create_patient_views(controller)
 
     request = factory.post(
         "/patients/",
-        data=json.dumps(
-            register_payload()
-        ),
+        data=json.dumps(register_payload()),
         content_type="application/json",
     )
 
-    response = await register_view(
-        request
-    )
+    response = await register_view(request)
 
     assert response.status_code == 201
 
@@ -139,60 +119,33 @@ async def test_register_patient_view_passes_validated_schema_to_controller() -> 
     controller = make_controller()
 
     patient_response = Mock()
-    patient_response.model_dump.return_value = (
-        patient_response_payload()
-    )
+    patient_response.model_dump.return_value = patient_response_payload()
 
-    controller.register_patient.return_value = (
-        patient_response
-    )
+    controller.register_patient.return_value = patient_response
 
-    register_view, _ = create_patient_views(
-        controller
-    )
+    register_view, _ = create_patient_views(controller)
 
     request = factory.post(
         "/patients/",
-        data=json.dumps(
-            register_payload()
-        ),
+        data=json.dumps(register_payload()),
         content_type="application/json",
     )
 
-    await register_view(
-        request
-    )
+    await register_view(request)
 
-    schema = (
-        controller
-        .register_patient
-        .await_args
-        .args[0]
-    )
+    schema = controller.register_patient.await_args.args[0]
 
-    assert schema.medical_record_number == (
-        "MRN-001"
-    )
+    assert schema.medical_record_number == ("MRN-001")
 
-    assert schema.first_name == (
-        "John"
-    )
+    assert schema.first_name == ("John")
 
-    assert schema.last_name == (
-        "Doe"
-    )
+    assert schema.last_name == ("Doe")
 
-    assert schema.email == (
-        "john@example.com"
-    )
+    assert schema.email == ("john@example.com")
 
-    assert schema.phone_number == (
-        "+2348012345678"
-    )
+    assert schema.phone_number == ("+2348012345678")
 
-    assert schema.gender == (
-        "MALE"
-    )
+    assert schema.gender == ("MALE")
 
     assert schema.date_of_birth == date(
         1990,
@@ -200,25 +153,15 @@ async def test_register_patient_view_passes_validated_schema_to_controller() -> 
         1,
     )
 
-    assert schema.street == (
-        "12 Allen Avenue"
-    )
+    assert schema.street == ("12 Allen Avenue")
 
-    assert schema.city == (
-        "Ikeja"
-    )
+    assert schema.city == ("Ikeja")
 
-    assert schema.state == (
-        "Lagos"
-    )
+    assert schema.state == ("Lagos")
 
-    assert schema.postal_code == (
-        "100001"
-    )
+    assert schema.postal_code == ("100001")
 
-    assert schema.country == (
-        "NG"
-    )
+    assert schema.country == ("NG")
 
 
 @pytest.mark.asyncio
@@ -227,9 +170,7 @@ async def test_register_patient_view_rejects_invalid_json() -> None:
 
     controller = make_controller()
 
-    register_view, _ = create_patient_views(
-        controller
-    )
+    register_view, _ = create_patient_views(controller)
 
     request = factory.post(
         "/patients/",
@@ -237,9 +178,7 @@ async def test_register_patient_view_rejects_invalid_json() -> None:
         content_type="application/json",
     )
 
-    response = await register_view(
-        request
-    )
+    response = await register_view(request)
 
     assert response.status_code == 400
 
@@ -252,9 +191,7 @@ async def test_register_patient_view_rejects_invalid_payload() -> None:
 
     controller = make_controller()
 
-    register_view, _ = create_patient_views(
-        controller
-    )
+    register_view, _ = create_patient_views(controller)
 
     payload = register_payload()
 
@@ -266,9 +203,7 @@ async def test_register_patient_view_rejects_invalid_payload() -> None:
         content_type="application/json",
     )
 
-    response = await register_view(
-        request
-    )
+    response = await register_view(request)
 
     assert response.status_code == 400
 
@@ -279,6 +214,7 @@ async def test_register_patient_view_rejects_invalid_payload() -> None:
 # UPDATE CONTACT INFORMATION
 # =========================================================
 
+
 @pytest.mark.asyncio
 async def test_update_patient_contact_information_view_returns_200() -> None:
     factory = AsyncRequestFactory()
@@ -288,36 +224,24 @@ async def test_update_patient_contact_information_view_returns_200() -> None:
     patient_id = uuid4()
 
     patient_response = Mock()
-    patient_response.model_dump.return_value = (
-        patient_response_payload(
-            patient_id=patient_id,
-            email="updated@example.com",
-            phone_number="+2348098765432",
-            street="1 Independence Avenue",
-            city="Abuja",
-            state="FCT",
-            postal_code="900001",
-            country="NG",
-        )
+    patient_response.model_dump.return_value = patient_response_payload(
+        patient_id=patient_id,
+        email="updated@example.com",
+        phone_number="+2348098765432",
+        street="1 Independence Avenue",
+        city="Abuja",
+        state="FCT",
+        postal_code="900001",
+        country="NG",
     )
 
-    controller.update_contact_information.return_value = (
-        patient_response
-    )
+    controller.update_contact_information.return_value = patient_response
 
-    _, update_view = create_patient_views(
-        controller
-    )
+    _, update_view = create_patient_views(controller)
 
     request = factory.patch(
-        (
-            f"/patients/"
-            f"{patient_id}/"
-            f"contact-information/"
-        ),
-        data=json.dumps(
-            update_payload()
-        ),
+        (f"/patients/{patient_id}/contact-information/"),
+        data=json.dumps(update_payload()),
         content_type="application/json",
     )
 
@@ -340,36 +264,24 @@ async def test_update_patient_contact_information_view_passes_patient_id() -> No
     patient_id = uuid4()
 
     patient_response = Mock()
-    patient_response.model_dump.return_value = (
-        patient_response_payload(
-            patient_id=patient_id,
-            email="updated@example.com",
-            phone_number="+2348098765432",
-            street="1 Independence Avenue",
-            city="Abuja",
-            state="FCT",
-            postal_code="900001",
-            country="NG",
-        )
+    patient_response.model_dump.return_value = patient_response_payload(
+        patient_id=patient_id,
+        email="updated@example.com",
+        phone_number="+2348098765432",
+        street="1 Independence Avenue",
+        city="Abuja",
+        state="FCT",
+        postal_code="900001",
+        country="NG",
     )
 
-    controller.update_contact_information.return_value = (
-        patient_response
-    )
+    controller.update_contact_information.return_value = patient_response
 
-    _, update_view = create_patient_views(
-        controller
-    )
+    _, update_view = create_patient_views(controller)
 
     request = factory.patch(
-        (
-            f"/patients/"
-            f"{patient_id}/"
-            f"contact-information/"
-        ),
-        data=json.dumps(
-            update_payload()
-        ),
+        (f"/patients/{patient_id}/contact-information/"),
+        data=json.dumps(update_payload()),
         content_type="application/json",
     )
 
@@ -378,44 +290,25 @@ async def test_update_patient_contact_information_view_passes_patient_id() -> No
         patient_id=patient_id,
     )
 
-    args = (
-        controller
-        .update_contact_information
-        .await_args
-        .args
-    )
+    args = controller.update_contact_information.await_args.args
 
     assert args[0] == patient_id
 
     schema = args[1]
 
-    assert schema.email == (
-        "updated@example.com"
-    )
+    assert schema.email == ("updated@example.com")
 
-    assert schema.phone_number == (
-        "+2348098765432"
-    )
+    assert schema.phone_number == ("+2348098765432")
 
-    assert schema.street == (
-        "1 Independence Avenue"
-    )
+    assert schema.street == ("1 Independence Avenue")
 
-    assert schema.city == (
-        "Abuja"
-    )
+    assert schema.city == ("Abuja")
 
-    assert schema.state == (
-        "FCT"
-    )
+    assert schema.state == ("FCT")
 
-    assert schema.postal_code == (
-        "900001"
-    )
+    assert schema.postal_code == ("900001")
 
-    assert schema.country == (
-        "NG"
-    )
+    assert schema.country == ("NG")
 
 
 @pytest.mark.asyncio
@@ -424,18 +317,12 @@ async def test_update_patient_contact_information_view_rejects_invalid_json() ->
 
     controller = make_controller()
 
-    _, update_view = create_patient_views(
-        controller
-    )
+    _, update_view = create_patient_views(controller)
 
     patient_id = uuid4()
 
     request = factory.patch(
-        (
-            f"/patients/"
-            f"{patient_id}/"
-            f"contact-information/"
-        ),
+        (f"/patients/{patient_id}/contact-information/"),
         data="{invalid-json",
         content_type="application/json",
     )
@@ -456,9 +343,7 @@ async def test_update_patient_contact_information_view_rejects_invalid_payload()
 
     controller = make_controller()
 
-    _, update_view = create_patient_views(
-        controller
-    )
+    _, update_view = create_patient_views(controller)
 
     patient_id = uuid4()
 
@@ -467,11 +352,7 @@ async def test_update_patient_contact_information_view_rejects_invalid_payload()
     payload["email"] = "invalid-email"
 
     request = factory.patch(
-        (
-            f"/patients/"
-            f"{patient_id}/"
-            f"contact-information/"
-        ),
+        (f"/patients/{patient_id}/contact-information/"),
         data=json.dumps(payload),
         content_type="application/json",
     )

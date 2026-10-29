@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from uuid import UUID
@@ -32,8 +31,6 @@ class GetConversationHistoryUseCase:
         Retrieve all messages belonging to a conversation.
         """
 
-        history = await self._conversation_service.get_history(
-            conversation_id
-        )
+        history = await self._conversation_service.get_history(conversation_id)
 
         return Result.success(history)

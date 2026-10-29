@@ -18,24 +18,9 @@ class RegisterProviderTool(Tool):
     def parameters(self):
 
         return [
-
-            ToolParameter(
-                "provider_name",
-                "string",
-                "Healthcare provider name"
-            ),
-
-            ToolParameter(
-                "license_number",
-                "string",
-                "Professional license number"
-            ),
-
-            ToolParameter(
-                "specialization",
-                "string",
-                "Medical specialization"
-            )
+            ToolParameter("provider_name", "string", "Healthcare provider name"),
+            ToolParameter("license_number", "string", "Professional license number"),
+            ToolParameter("specialization", "string", "Medical specialization"),
         ]
 
     def execute(self, **kwargs):

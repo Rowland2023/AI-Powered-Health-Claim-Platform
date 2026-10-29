@@ -1,20 +1,7 @@
-
 from datetime import date
 
 import pytest
 import pytest_asyncio
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
-
-from shared.infrastructure.persistence.base import Base
-
-# Import all persistence models so SQLAlchemy registers
-# them with Base.metadata before create_all() runs.
-from patient.infrastructure.persistence import models
-
 from patient.domain.entities.patient import Patient
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
@@ -26,15 +13,19 @@ from patient.domain.value_objects.medical_record_number import (
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
 
+# Import all persistence models so SQLAlchemy registers
+# them with Base.metadata before create_all() runs.
 from patient.infrastructure.persistence.repositories.sqlalchemy_patient_repository import (
     SQLAlchemyPatientRepository,
 )
-
-
-TEST_DATABASE_URL = (
-    "postgresql+asyncpg://postgres:postgres@localhost:5432/"
-    "healthcare_test"
+from shared.infrastructure.persistence.base import Base
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
 )
+
+TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/healthcare_test"
 
 
 @pytest_asyncio.fixture
@@ -75,21 +66,15 @@ async def session(session_factory):
 @pytest.fixture
 def patient() -> Patient:
     return Patient.register(
-        medical_record_number=MedicalRecordNumber(
-            "MRN-TEST-001"
-        ),
+        medical_record_number=MedicalRecordNumber("MRN-TEST-001"),
         name=PatientName(
             first_name="John",
             last_name="Doe",
         ),
         email=Email("john@example.com"),
-        phone_number=PhoneNumber(
-            "+2348012345678"
-        ),
+        phone_number=PhoneNumber("+2348012345678"),
         gender=Gender.MALE,
-        date_of_birth=DateOfBirth(
-            date(1990, 1, 1)
-        ),
+        date_of_birth=DateOfBirth(date(1990, 1, 1)),
         address=Address(
             street="Lagos, Nigeria",
             city="Lagos",
@@ -114,10 +99,7 @@ async def test_add_patient(
 
     assert stored is not None
     assert stored.id == patient.id
-    assert (
-        stored.medical_record_number.value
-        == "MRN-TEST-001"
-    )
+    assert stored.medical_record_number.value == "MRN-TEST-001"
 
 
 @pytest.mark.asyncio
@@ -130,9 +112,7 @@ async def test_get_patient_by_medical_record_number(
     await repository.add(patient)
     await session.commit()
 
-    stored = await repository.get_by_medical_record_number(
-        patient.medical_record_number
-    )
+    stored = await repository.get_by_medical_record_number(patient.medical_record_number)
 
     assert stored is not None
     assert stored.id == patient.id
@@ -144,9 +124,7 @@ async def test_get_missing_patient_returns_none(
 ):
     repository = SQLAlchemyPatientRepository(session)
 
-    result = await repository.get_by_id(
-        "00000000-0000-0000-0000-000000000000"
-    )
+    result = await repository.get_by_id("00000000-0000-0000-0000-000000000000")
 
     assert result is None
 
@@ -163,9 +141,7 @@ async def test_update_patient(
 
     patient.update_contact_information(
         email=Email("updated@example.com"),
-        phone_number=PhoneNumber(
-            "+2348098765432"
-        ),
+        phone_number=PhoneNumber("+2348098765432"),
         address=Address(
             street="Abuja, Nigeria",
             city="Abuja",
@@ -181,11 +157,5 @@ async def test_update_patient(
     stored = await repository.get_by_id(patient.id)
 
     assert stored is not None
-    assert (
-        stored.email.value
-        == "updated@example.com"
-    )
-    assert (
-        stored.phone_number.value
-        == "+2348098765432"
-    )
+    assert stored.email.value == "updated@example.com"
+    assert stored.phone_number.value == "+2348098765432"

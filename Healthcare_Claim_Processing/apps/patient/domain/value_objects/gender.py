@@ -25,18 +25,14 @@ class Gender(str, Enum):
             ValueError: If the supplied value is not supported.
         """
         if not isinstance(value, str):
-            raise ValueError(
-                "Gender must be a string."
-            )
+            raise ValueError("Gender must be a string.")
 
         normalized = value.strip().upper()
 
         try:
             return cls(normalized)
         except ValueError as exc:
-            raise ValueError(
-                f"Invalid gender: {value}"
-            ) from exc
+            raise ValueError(f"Invalid gender: {value}") from exc
 
     def __str__(self) -> str:
         return self.value

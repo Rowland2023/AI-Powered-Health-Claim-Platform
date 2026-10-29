@@ -5,7 +5,6 @@ from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
-
 from patient.application.unit_of_work import UnitOfWork
 from patient.application.use_cases.update_patient_contact_information import (
     UpdatePatientContactInformationCommand,
@@ -34,9 +33,7 @@ def make_patient() -> Patient:
         email=Email("john@example.com"),
         phone_number=PhoneNumber("+2348012345678"),
         gender=Gender.MALE,
-        date_of_birth=DateOfBirth(
-            value=date(1990, 1, 1)
-        ),
+        date_of_birth=DateOfBirth(value=date(1990, 1, 1)),
         address=Address(
             street="12 Allen Avenue",
             city="Ikeja",
@@ -90,9 +87,7 @@ async def test_update_patient_updates_contact_information() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
@@ -114,9 +109,7 @@ async def test_update_patient_loads_patient_by_id() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
@@ -124,9 +117,7 @@ async def test_update_patient_loads_patient_by_id() -> None:
 
     await use_case.execute(command)
 
-    uow.patient_repository.get_by_id.assert_awaited_once_with(
-        patient.id
-    )
+    uow.patient_repository.get_by_id.assert_awaited_once_with(patient.id)
 
 
 @pytest.mark.asyncio
@@ -136,19 +127,13 @@ async def test_update_patient_persists_updated_patient() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
-    result = await use_case.execute(
-        make_command(patient.id)
-    )
+    result = await use_case.execute(make_command(patient.id))
 
-    uow.patient_repository.update.assert_awaited_once_with(
-        result
-    )
+    uow.patient_repository.update.assert_awaited_once_with(result)
 
 
 @pytest.mark.asyncio
@@ -158,15 +143,11 @@ async def test_update_patient_registers_aggregate_with_uow() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
-    result = await use_case.execute(
-        make_command(patient.id)
-    )
+    result = await use_case.execute(make_command(patient.id))
 
     uow.register.assert_called_once_with(result)
 
@@ -178,15 +159,11 @@ async def test_update_patient_commits_transaction() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
-    await use_case.execute(
-        make_command(patient.id)
-    )
+    await use_case.execute(make_command(patient.id))
 
     uow.commit.assert_awaited_once()
 
@@ -198,15 +175,11 @@ async def test_update_patient_creates_updated_domain_event() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=patient
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=patient)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
-    await use_case.execute(
-        make_command(patient.id)
-    )
+    await use_case.execute(make_command(patient.id))
 
     assert len(patient.domain_events) == 1
 
@@ -225,9 +198,7 @@ async def test_update_patient_raises_when_patient_does_not_exist() -> None:
 
     uow = make_uow()
 
-    uow.patient_repository.get_by_id = AsyncMock(
-        return_value=None
-    )
+    uow.patient_repository.get_by_id = AsyncMock(return_value=None)
 
     use_case = UpdatePatientContactInformationUseCase(uow)
 
@@ -235,9 +206,7 @@ async def test_update_patient_raises_when_patient_does_not_exist() -> None:
         ValueError,
         match=f"Patient {patient_id} was not found",
     ):
-        await use_case.execute(
-            make_command(patient_id)
-        )
+        await use_case.execute(make_command(patient_id))
 
     uow.patient_repository.update.assert_not_awaited()
     uow.commit.assert_not_awaited()

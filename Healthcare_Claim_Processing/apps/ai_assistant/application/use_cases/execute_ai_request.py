@@ -5,26 +5,21 @@ from shared.application.result import Result
 from ai_assistant.application.commands.execute_prompt import (
     ExecutePromptCommand,
 )
-
 from ai_assistant.application.dto.ai_response_dto import (
     AIResponseDTO,
 )
-
+from ai_assistant.application.services.conversation_service import (
+    ConversationService,
+)
 from ai_assistant.application.services.llm_service import (
     LLMService,
 )
-
 from ai_assistant.application.services.tool_execution_service import (
     ToolExecutionService,
 )
 
-from ai_assistant.application.services.conversation_service import (
-    ConversationService,
-)
-
 
 class ExecuteAIRequestUseCase:
-
     def __init__(
         self,
         llm_service: LLMService,
@@ -47,10 +42,7 @@ class ExecuteAIRequestUseCase:
         history = []
 
         if command.conversation_id:
-
-            history = await self._conversation.get_history(
-                command.conversation_id
-            )
+            history = await self._conversation.get_history(command.conversation_id)
 
         #
         # Available tools
@@ -75,7 +67,6 @@ class ExecuteAIRequestUseCase:
         #
 
         for tool_call in tool_calls:
-
             result = await self._tools.execute(
                 tool_call.tool_name,
                 tool_call.arguments,
@@ -98,7 +89,6 @@ class ExecuteAIRequestUseCase:
         #
 
         if command.conversation_id:
-
             await self._conversation.save_message(
                 command.conversation_id,
                 role="user",

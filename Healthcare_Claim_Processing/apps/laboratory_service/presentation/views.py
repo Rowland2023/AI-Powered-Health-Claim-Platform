@@ -3,14 +3,10 @@ from datetime import date, datetime
 from enum import Enum
 from uuid import UUID
 
-from django.http import Http404
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.laboratory_service.application.use_cases.attach_result import (
-    AttachLabResultUseCase,
-)
 from apps.laboratory_service.application.use_cases.collect_specimen import (
     CollectSpecimenUseCase,
 )
@@ -138,9 +134,7 @@ class ValidateLabResultAPIView(LaboratoryAPIView):
                 order_id=order_id,
                 pathologist_id=identity.pathologist_id,
             )
-            result = ValidateLabResultUseCase(
-                self.get_repository()
-            ).execute(dto)
+            result = ValidateLabResultUseCase(self.get_repository()).execute(dto)
         except OrderNotFoundException:
             return Response(
                 {"error": "Laboratory order not found"},

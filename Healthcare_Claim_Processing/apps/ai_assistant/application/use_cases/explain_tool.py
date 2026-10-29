@@ -2,21 +2,18 @@
 
 from shared.application.result import Result
 
-from ai_assistant.application.queries.get_tool_definition import (
-    GetToolDefinitionQuery,
-)
-
 from ai_assistant.application.dto.tool_definition_dto import (
     ToolDefinitionDTO,
 )
-
+from ai_assistant.application.queries.get_tool_definition import (
+    GetToolDefinitionQuery,
+)
 from ai_assistant.application.services.tool_execution_service import (
     ToolExecutionService,
 )
 
 
 class ExplainToolUseCase:
-
     def __init__(
         self,
         tool_execution_service: ToolExecutionService,

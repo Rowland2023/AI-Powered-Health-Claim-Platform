@@ -1,11 +1,9 @@
-
 from datetime import date
 
 from patient.domain.entities.patient import Patient
 from patient.domain.events.patient_deactivated import PatientDeactivated
 from patient.domain.events.patient_registered import PatientRegistered
 from patient.domain.events.patient_updated import PatientUpdated
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email

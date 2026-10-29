@@ -2,7 +2,6 @@ from .tool import Tool
 
 
 class SummarizeMedicalRecordTool(Tool):
-
     @property
     def name(self):
         return "summarize_medical_record"

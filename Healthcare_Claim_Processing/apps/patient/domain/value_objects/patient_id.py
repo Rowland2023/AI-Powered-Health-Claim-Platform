@@ -36,9 +36,7 @@ class PatientId:
         try:
             return cls(value=UUID(value))
         except (ValueError, TypeError, AttributeError) as exc:
-            raise ValueError(
-                f"Invalid patient ID: {value}"
-            ) from exc
+            raise ValueError(f"Invalid patient ID: {value}") from exc
 
     def __str__(self) -> str:
         return str(self.value)

@@ -39,9 +39,7 @@ class ScheduleAppointmentUseCase:
             reason=command.reason,
         )
 
-        await self.unit_of_work.appointment_repository.add(
-            appointment
-        )
+        await self.unit_of_work.appointment_repository.add(appointment)
 
         self.unit_of_work.register(appointment)
 

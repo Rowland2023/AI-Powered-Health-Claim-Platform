@@ -15,9 +15,7 @@ class ToolRegistry:
         tool: Tool,
     ) -> None:
 
-        self._tools[
-            tool.definition.name
-        ] = tool
+        self._tools[tool.definition.name] = tool
 
     def register_many(
         self,
@@ -45,13 +43,8 @@ class ToolRegistry:
         self,
     ) -> list:
 
-        return [
-            tool.definition
-            for tool in self._tools.values()
-        ]
+        return [tool.definition for tool in self._tools.values()]
 
     def all(self):
 
-        return list(
-            self._tools.values()
-        )
+        return list(self._tools.values())

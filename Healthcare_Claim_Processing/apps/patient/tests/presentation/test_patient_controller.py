@@ -1,11 +1,9 @@
-
 from __future__ import annotations
 
 from datetime import date
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from patient.domain.entities.patient import Patient
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
@@ -16,7 +14,6 @@ from patient.domain.value_objects.medical_record_number import (
 )
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
-
 from patient.presentation.http.controllers.patient_controller import (
     PatientController,
 )
@@ -25,7 +22,6 @@ from patient.presentation.http.schemas.patient_schema import (
     UpdatePatientContactInformationRequest,
 )
 
-
 # =========================================================
 # HELPERS
 # =========================================================
@@ -33,23 +29,15 @@ from patient.presentation.http.schemas.patient_schema import (
 
 def make_patient() -> Patient:
     return Patient.register(
-        medical_record_number=MedicalRecordNumber(
-            "MRN-001"
-        ),
+        medical_record_number=MedicalRecordNumber("MRN-001"),
         name=PatientName(
             first_name="John",
             last_name="Doe",
         ),
-        email=Email(
-            "john@example.com"
-        ),
-        phone_number=PhoneNumber(
-            "+2348012345678"
-        ),
+        email=Email("john@example.com"),
+        phone_number=PhoneNumber("+2348012345678"),
         gender=Gender.MALE,
-        date_of_birth=DateOfBirth(
-            value=date(1990, 1, 1)
-        ),
+        date_of_birth=DateOfBirth(value=date(1990, 1, 1)),
         address=Address(
             street="12 Allen Avenue",
             city="Ikeja",
@@ -64,9 +52,7 @@ def make_register_use_case(
     patient: Patient,
 ):
     use_case = MagicMock()
-    use_case.execute = AsyncMock(
-        return_value=patient
-    )
+    use_case.execute = AsyncMock(return_value=patient)
     return use_case
 
 
@@ -74,9 +60,7 @@ def make_update_use_case(
     patient: Patient,
 ):
     use_case = MagicMock()
-    use_case.execute = AsyncMock(
-        return_value=patient
-    )
+    use_case.execute = AsyncMock(return_value=patient)
     return use_case
 
 
@@ -95,9 +79,7 @@ def make_controller(
 
     return PatientController(
         register_patient_use_case=register_use_case,
-        update_patient_contact_information_use_case=(
-            update_use_case
-        ),
+        update_patient_contact_information_use_case=(update_use_case),
     )
 
 
@@ -111,9 +93,7 @@ async def test_register_patient_calls_use_case() -> None:
 
     patient = make_patient()
 
-    register_use_case = make_register_use_case(
-        patient
-    )
+    register_use_case = make_register_use_case(patient)
 
     controller = make_controller(
         register_use_case=register_use_case,
@@ -144,9 +124,7 @@ async def test_register_patient_returns_patient_response() -> None:
 
     patient = make_patient()
 
-    register_use_case = make_register_use_case(
-        patient
-    )
+    register_use_case = make_register_use_case(patient)
 
     controller = make_controller(
         register_use_case=register_use_case,
@@ -167,31 +145,19 @@ async def test_register_patient_returns_patient_response() -> None:
         country="NG",
     )
 
-    response = await controller.register_patient(
-        request
-    )
+    response = await controller.register_patient(request)
 
     assert response.id == patient.id
 
-    assert response.medical_record_number == str(
-        patient.medical_record_number
-    )
+    assert response.medical_record_number == str(patient.medical_record_number)
 
-    assert response.name == str(
-        patient.name
-    )
+    assert response.name == str(patient.name)
 
-    assert response.email == str(
-        patient.email
-    )
+    assert response.email == str(patient.email)
 
-    assert response.phone_number == str(
-        patient.phone_number
-    )
+    assert response.phone_number == str(patient.phone_number)
 
-    assert response.gender == str(
-        patient.gender
-    )
+    assert response.gender == str(patient.gender)
 
     assert response.date_of_birth == date(
         1990,
@@ -199,9 +165,7 @@ async def test_register_patient_returns_patient_response() -> None:
         1,
     )
 
-    assert response.address == str(
-        patient.address
-    )
+    assert response.address == str(patient.address)
 
     assert response.active is True
 
@@ -211,9 +175,7 @@ async def test_register_patient_passes_request_data_to_use_case() -> None:
 
     patient = make_patient()
 
-    register_use_case = make_register_use_case(
-        patient
-    )
+    register_use_case = make_register_use_case(patient)
 
     controller = make_controller(
         register_use_case=register_use_case,
@@ -236,27 +198,16 @@ async def test_register_patient_passes_request_data_to_use_case() -> None:
 
     await controller.register_patient(request)
 
-    command = (
-        register_use_case
-        .execute
-        .await_args
-        .args[0]
-    )
+    command = register_use_case.execute.await_args.args[0]
 
-    assert command.medical_record_number == (
-        MedicalRecordNumber("MRN-001")
-    )
+    assert command.medical_record_number == (MedicalRecordNumber("MRN-001"))
 
     assert command.name.first_name == "John"
     assert command.name.last_name == "Doe"
 
-    assert command.email == Email(
-        "john@example.com"
-    )
+    assert command.email == Email("john@example.com")
 
-    assert command.phone_number == PhoneNumber(
-        "+2348012345678"
-    )
+    assert command.phone_number == PhoneNumber("+2348012345678")
 
     assert command.gender == Gender.MALE
 
@@ -266,9 +217,7 @@ async def test_register_patient_passes_request_data_to_use_case() -> None:
         1,
     )
 
-    assert command.address.street == (
-        "12 Allen Avenue"
-    )
+    assert command.address.street == ("12 Allen Avenue")
 
     assert command.address.city == "Ikeja"
     assert command.address.state == "Lagos"
@@ -286,9 +235,7 @@ async def test_update_contact_information_calls_use_case() -> None:
 
     patient = make_patient()
 
-    update_use_case = make_update_use_case(
-        patient
-    )
+    update_use_case = make_update_use_case(patient)
 
     controller = make_controller(
         update_use_case=update_use_case,
@@ -319,9 +266,7 @@ async def test_update_contact_information_builds_command() -> None:
 
     patient = make_patient()
 
-    update_use_case = make_update_use_case(
-        patient
-    )
+    update_use_case = make_update_use_case(patient)
 
     controller = make_controller(
         update_use_case=update_use_case,
@@ -344,26 +289,15 @@ async def test_update_contact_information_builds_command() -> None:
         request,
     )
 
-    command = (
-        update_use_case
-        .execute
-        .await_args
-        .args[0]
-    )
+    command = update_use_case.execute.await_args.args[0]
 
     assert command.patient_id == patient_id
 
-    assert command.email == Email(
-        "updated@example.com"
-    )
+    assert command.email == Email("updated@example.com")
 
-    assert command.phone_number == PhoneNumber(
-        "+2348098765432"
-    )
+    assert command.phone_number == PhoneNumber("+2348098765432")
 
-    assert command.address.street == (
-        "1 Independence Avenue"
-    )
+    assert command.address.street == ("1 Independence Avenue")
 
     assert command.address.city == "Abuja"
     assert command.address.state == "FCT"
@@ -376,9 +310,7 @@ async def test_update_contact_information_returns_patient_response() -> None:
 
     patient = make_patient()
 
-    update_use_case = make_update_use_case(
-        patient
-    )
+    update_use_case = make_update_use_case(patient)
 
     controller = make_controller(
         update_use_case=update_use_case,
@@ -401,25 +333,15 @@ async def test_update_contact_information_returns_patient_response() -> None:
 
     assert response.id == patient.id
 
-    assert response.medical_record_number == str(
-        patient.medical_record_number
-    )
+    assert response.medical_record_number == str(patient.medical_record_number)
 
-    assert response.name == str(
-        patient.name
-    )
+    assert response.name == str(patient.name)
 
-    assert response.email == str(
-        patient.email
-    )
+    assert response.email == str(patient.email)
 
-    assert response.phone_number == str(
-        patient.phone_number
-    )
+    assert response.phone_number == str(patient.phone_number)
 
-    assert response.gender == str(
-        patient.gender
-    )
+    assert response.gender == str(patient.gender)
 
     assert response.date_of_birth == date(
         1990,
@@ -427,8 +349,6 @@ async def test_update_contact_information_returns_patient_response() -> None:
         1,
     )
 
-    assert response.address == str(
-        patient.address
-    )
+    assert response.address == str(patient.address)
 
     assert response.active is True

@@ -19,16 +19,12 @@ def configure_patient_views():
 
     controller = dependencies["patient_controller"]
 
-    class ConfiguredPatientRegistrationView(
-        PatientRegistrationView
-    ):
+    class ConfiguredPatientRegistrationView(PatientRegistrationView):
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
             self._controller = controller
 
-    class ConfiguredPatientContactInformationView(
-        PatientContactInformationView
-    ):
+    class ConfiguredPatientContactInformationView(PatientContactInformationView):
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
             self._controller = controller

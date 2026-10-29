@@ -12,7 +12,6 @@ class AIResponsePresenter:
     def present(result: Result) -> dict:
 
         if result.is_failure:
-
             return {
                 "success": False,
                 "error": {

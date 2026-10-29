@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from uuid import UUID
@@ -9,37 +8,35 @@ from ai_assistant.application.commands.execute_prompt import (
 from ai_assistant.application.commands.execute_tool import (
     ExecuteToolCommand,
 )
-
+from ai_assistant.application.queries.get_conversation_history import (
+    GetConversationHistoryQuery,
+)
 from ai_assistant.application.queries.get_tool_definition import (
     GetToolDefinitionQuery,
 )
 from ai_assistant.application.queries.list_available_tools import (
     ListAvailableToolsQuery,
 )
-from ai_assistant.application.queries.get_conversation_history import (
-    GetConversationHistoryQuery,
-)
 from ai_assistant.application.queries.summarize_conversation import (
     SummarizeConversationQuery,
 )
-
 from ai_assistant.application.use_cases.execute_ai_request import (
     ExecuteAIRequestUseCase,
 )
 from ai_assistant.application.use_cases.execute_tool_call import (
     ExecuteToolCallUseCase,
 )
-from ai_assistant.application.use_cases.list_tools import (
-    ListToolsUseCase,
-)
 from ai_assistant.application.use_cases.explain_tool import (
     ExplainToolUseCase,
 )
-from ai_assistant.application.use_cases.summarize_conversation import (
-    SummarizeConversationUseCase,
-)
 from ai_assistant.application.use_cases.get_conversation_history import (
     GetConversationHistoryUseCase,
+)
+from ai_assistant.application.use_cases.list_tools import (
+    ListToolsUseCase,
+)
+from ai_assistant.application.use_cases.summarize_conversation import (
+    SummarizeConversationUseCase,
 )
 
 from ...presenters.ai_response_presenter import (
@@ -51,7 +48,6 @@ from ...presenters.conversation_presenter import (
 from ...presenters.tool_presenter import (
     ToolPresenter,
 )
-
 from ...serializers.ai_request_serializer import (
     AIRequestSerializer,
 )
@@ -99,17 +95,11 @@ class AIController:
         self._summarize_conversation = summarize_conversation
         self._conversation_history = conversation_history
 
-        self._ai_response_presenter = (
-            ai_response_presenter
-        )
+        self._ai_response_presenter = ai_response_presenter
 
-        self._conversation_presenter = (
-            conversation_presenter
-        )
+        self._conversation_presenter = conversation_presenter
 
-        self._tool_presenter = (
-            tool_presenter
-        )
+        self._tool_presenter = tool_presenter
 
     # =========================================================
     # CHAT
@@ -129,13 +119,9 @@ class AIController:
             max_tokens=serializer.max_tokens,
         )
 
-        result = await self._execute_ai_request.execute(
-            command
-        )
+        result = await self._execute_ai_request.execute(command)
 
-        return self._ai_response_presenter.present(
-            result
-        )
+        return self._ai_response_presenter.present(result)
 
     # =========================================================
     # EXECUTE TOOL
@@ -151,13 +137,9 @@ class AIController:
             arguments=serializer.arguments,
         )
 
-        result = await self._execute_tool_call.execute(
-            command
-        )
+        result = await self._execute_tool_call.execute(command)
 
-        return self._ai_response_presenter.present(
-            result
-        )
+        return self._ai_response_presenter.present(result)
 
     # =========================================================
     # LIST TOOLS
@@ -167,13 +149,9 @@ class AIController:
 
         query = ListAvailableToolsQuery()
 
-        result = await self._list_tools.execute(
-            query
-        )
+        result = await self._list_tools.execute(query)
 
-        return self._tool_presenter.present(
-            result
-        )
+        return self._tool_presenter.present(result)
 
     # =========================================================
     # EXPLAIN TOOL
@@ -188,13 +166,9 @@ class AIController:
             tool_name=tool_name,
         )
 
-        result = await self._explain_tool.execute(
-            query
-        )
+        result = await self._explain_tool.execute(query)
 
-        return self._tool_presenter.present(
-            result
-        )
+        return self._tool_presenter.present(result)
 
     # =========================================================
     # CONVERSATION HISTORY
@@ -209,13 +183,9 @@ class AIController:
             conversation_id=conversation_id,
         )
 
-        result = await self._conversation_history.execute(
-            query
-        )
+        result = await self._conversation_history.execute(query)
 
-        return self._conversation_presenter.present(
-            result
-        )
+        return self._conversation_presenter.present(result)
 
     # =========================================================
     # SUMMARIZE CONVERSATION
@@ -230,10 +200,6 @@ class AIController:
             conversation_id=conversation_id,
         )
 
-        result = await self._summarize_conversation.execute(
-            query
-        )
+        result = await self._summarize_conversation.execute(query)
 
-        return self._conversation_presenter.present(
-            result
-        )
+        return self._conversation_presenter.present(result)

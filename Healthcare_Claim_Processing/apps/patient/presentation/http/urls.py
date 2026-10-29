@@ -1,19 +1,15 @@
 from __future__ import annotations
 
 from django.urls import path
-
 from patient.composition import create_patient_dependencies
 from patient.presentation.http.views import create_patient_views
-
 
 dependencies = create_patient_dependencies()
 
 (
     register_patient,
     update_patient_contact_information,
-) = create_patient_views(
-    dependencies["patient_controller"]
-)
+) = create_patient_views(dependencies["patient_controller"])
 
 
 app_name = "patient"

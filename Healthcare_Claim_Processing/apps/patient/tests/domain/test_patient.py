@@ -1,9 +1,6 @@
-
 # patient/tests/domain/test_patient.py
 
 from datetime import date
-
-import pytest
 
 from patient.domain.entities.patient import Patient
 from patient.domain.value_objects.address import Address
@@ -149,24 +146,14 @@ def test_patient_activation_is_idempotent():
     assert patient.active is True
     assert patient.domain_events == ()
 
+
 # patient/tests/domain/test_patient_events.py
 
-from datetime import date
 
 from patient.domain.entities.patient import Patient
 from patient.domain.events.patient_deactivated import PatientDeactivated
 from patient.domain.events.patient_registered import PatientRegistered
 from patient.domain.events.patient_updated import PatientUpdated
-
-from patient.domain.value_objects.address import Address
-from patient.domain.value_objects.date_of_birth import DateOfBirth
-from patient.domain.value_objects.email import Email
-from patient.domain.value_objects.gender import Gender
-from patient.domain.value_objects.medical_record_number import (
-    MedicalRecordNumber,
-)
-from patient.domain.value_objects.patient_name import PatientName
-from patient.domain.value_objects.phone_number import PhoneNumber
 
 
 def make_patient() -> Patient:

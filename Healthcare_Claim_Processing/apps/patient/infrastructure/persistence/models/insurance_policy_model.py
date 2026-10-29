@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from shared.infrastructure.persistence.base import Base
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from shared.infrastructure.persistence.base import Base
 
 
 class InsurancePolicyModel(Base):

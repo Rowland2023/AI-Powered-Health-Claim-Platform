@@ -20,7 +20,7 @@ from apps.laboratory_service.domain.value_objects import SpecimenType
 class CollectSpecimenUseCase:
     """
     Application use case to record physical specimen collection against an existing order.
-    
+
     Guarantees concurrency safety via pessimistic locking (SELECT FOR UPDATE)
     and relies on repository-level outbox staging.
     """
@@ -65,8 +65,8 @@ class CollectSpecimenUseCase:
         specimen_dto = None
         if aggregate.specimen:
             type_str = (
-                aggregate.specimen.type.value 
-                if hasattr(aggregate.specimen.type, "value") 
+                aggregate.specimen.type.value
+                if hasattr(aggregate.specimen.type, "value")
                 else str(aggregate.specimen.type)
             )
             specimen_dto = SpecimenOutputDTO(
@@ -77,15 +77,15 @@ class CollectSpecimenUseCase:
             )
 
         status_str = (
-            aggregate.status.value 
-            if hasattr(aggregate.status, "value") 
-            else str(aggregate.status)
+            aggregate.status.value if hasattr(aggregate.status, "value") else str(aggregate.status)
         )
 
         results_dtos = [
             TestResultOutputDTO(
                 result_id=res.id,
-                test_code=res.test_code.code if hasattr(res.test_code, "code") else str(res.test_code),
+                test_code=res.test_code.code
+                if hasattr(res.test_code, "code")
+                else str(res.test_code),
                 test_name=getattr(res.test_code, "name", ""),
                 value=res.value,
                 unit=res.unit,

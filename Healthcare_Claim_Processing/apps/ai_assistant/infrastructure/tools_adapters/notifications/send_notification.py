@@ -18,24 +18,9 @@ class SendNotificationTool(Tool):
     def parameters(self):
 
         return [
-
-            ToolParameter(
-                "recipient_id",
-                "uuid",
-                "Recipient identifier"
-            ),
-
-            ToolParameter(
-                "channel",
-                "string",
-                "Notification channel (Email, SMS, Push)"
-            ),
-
-            ToolParameter(
-                "message",
-                "string",
-                "Notification message"
-            )
+            ToolParameter("recipient_id", "uuid", "Recipient identifier"),
+            ToolParameter("channel", "string", "Notification channel (Email, SMS, Push)"),
+            ToolParameter("message", "string", "Notification message"),
         ]
 
     def execute(self, **kwargs):

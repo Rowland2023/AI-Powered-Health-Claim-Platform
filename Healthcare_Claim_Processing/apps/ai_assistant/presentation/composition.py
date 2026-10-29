@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from ai_assistant.application.services.conversation_service import (
@@ -10,7 +9,6 @@ from ai_assistant.application.services.llm_service import (
 from ai_assistant.application.services.tool_execution_service import (
     ToolExecutionService,
 )
-
 from ai_assistant.application.use_cases.execute_ai_request import (
     ExecuteAIRequestUseCase,
 )
@@ -20,20 +18,18 @@ from ai_assistant.application.use_cases.execute_tool_call import (
 from ai_assistant.application.use_cases.explain_tool import (
     ExplainToolUseCase,
 )
+from ai_assistant.application.use_cases.get_conversation_history import (
+    GetConversationHistoryUseCase,
+)
 from ai_assistant.application.use_cases.list_tools import (
     ListToolsUseCase,
 )
 from ai_assistant.application.use_cases.summarize_conversation import (
     SummarizeConversationUseCase,
 )
-from ai_assistant.application.use_cases.get_conversation_history import (
-    GetConversationHistoryUseCase,
-)
-
 from ai_assistant.presentation.http.controllers.ai_assistant import (
     AIController,
 )
-
 from ai_assistant.presentation.http.presenters.ai_response_presenter import (
     AIResponsePresenter,
 )
@@ -133,10 +129,8 @@ def create_ai_dependencies(
         "explain_tool": explain_tool,
         "summarize_conversation": summarize_conversation,
         "conversation_history": conversation_history_use_case,
-
         "ai_response_presenter": ai_response_presenter,
         "conversation_presenter": conversation_presenter,
         "tool_presenter": tool_presenter,
-
         "ai_controller": ai_controller,
     }

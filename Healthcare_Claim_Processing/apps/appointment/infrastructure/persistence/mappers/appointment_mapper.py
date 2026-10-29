@@ -3,7 +3,6 @@ from __future__ import annotations
 from appointment.domain.entities.appointment import Appointment
 from appointment.domain.value_objects.appointment_status import AppointmentStatus
 from appointment.domain.value_objects.appointment_type import AppointmentType
-
 from appointment.infrastructure.persistence.models.appointment_model import (
     AppointmentModel,
 )

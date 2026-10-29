@@ -1,10 +1,8 @@
-
 from __future__ import annotations
 
 from patient.domain.entities.emergency_contact import EmergencyContact
 from patient.domain.entities.insurance_policy import InsurancePolicy
 from patient.domain.entities.patient import Patient
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email
@@ -14,7 +12,6 @@ from patient.domain.value_objects.medical_record_number import (
 )
 from patient.domain.value_objects.patient_name import PatientName
 from patient.domain.value_objects.phone_number import PhoneNumber
-
 from patient.infrastructure.persistence.models.emergency_contact_model import (
     EmergencyContactModel,
 )
@@ -118,9 +115,7 @@ class PatientMapper:
 
         return Patient(
             id=model.id,
-            medical_record_number=MedicalRecordNumber(
-                model.medical_record_number
-            ),
+            medical_record_number=MedicalRecordNumber(model.medical_record_number),
             name=PatientName(
                 first_name=model.first_name,
                 last_name=model.last_name,
@@ -128,9 +123,7 @@ class PatientMapper:
             email=Email(model.email),
             phone_number=PhoneNumber(model.phone_number),
             gender=Gender.from_value(model.gender),
-            date_of_birth=DateOfBirth.from_date(
-                model.date_of_birth
-            ),
+            date_of_birth=DateOfBirth.from_date(model.date_of_birth),
             address=Address(
                 street=model.street,
                 city=model.city,

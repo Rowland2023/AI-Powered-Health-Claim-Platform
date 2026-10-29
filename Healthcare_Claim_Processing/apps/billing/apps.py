@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class BillingServiceConfig(AppConfig):
-    name = 'billing_service'
+    name = "billing_service"

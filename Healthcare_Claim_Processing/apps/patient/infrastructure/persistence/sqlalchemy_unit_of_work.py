@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from sqlalchemy.ext.asyncio import (
@@ -7,13 +6,11 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from patient.application.unit_of_work import UnitOfWork
-
-from patient.infrastructure.persistence.repositories.sqlalchemy_patient_repository import (
-    SQLAlchemyPatientRepository,
-)
-
 from patient.infrastructure.outbox.sqlalchemy_outbox_repository import (
     SQLAlchemyOutboxRepository,
+)
+from patient.infrastructure.persistence.repositories.sqlalchemy_patient_repository import (
+    SQLAlchemyPatientRepository,
 )
 
 
@@ -60,17 +57,9 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
 
         self._session = self._session_factory()
 
-        self.patient_repository = (
-            SQLAlchemyPatientRepository(
-                self._session
-            )
-        )
+        self.patient_repository = SQLAlchemyPatientRepository(self._session)
 
-        self.outbox_repository = (
-            SQLAlchemyOutboxRepository(
-                self._session
-            )
-        )
+        self.outbox_repository = SQLAlchemyOutboxRepository(self._session)
 
         self._registered_aggregates = []
 
@@ -118,9 +107,7 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
         """
 
         if not hasattr(aggregate, "domain_events"):
-            raise TypeError(
-                "Registered aggregate must expose domain_events."
-            )
+            raise TypeError("Registered aggregate must expose domain_events.")
 
         self._registered_aggregates.append(aggregate)
 
@@ -138,22 +125,17 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
         """
 
         if self._session is None:
-            raise RuntimeError(
-                "UnitOfWork has not been entered."
-            )
+            raise RuntimeError("UnitOfWork has not been entered.")
 
         # -----------------------------------------------------
         # Persist domain events to the transactional outbox.
         # -----------------------------------------------------
 
         for aggregate in self._registered_aggregates:
-
             events = aggregate.domain_events
 
             if events:
-                await self.outbox_repository.add_all(
-                    events
-                )
+                await self.outbox_repository.add_all(events)
 
         # -----------------------------------------------------
         # Flush pending SQL statements.

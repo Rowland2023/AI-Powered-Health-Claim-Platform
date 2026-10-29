@@ -3,15 +3,16 @@
 import uuid
 from datetime import datetime, timezone
 from typing import Optional
-from apps.laboratory_service.domain.value_objects import SpecimenType
+
 from apps.laboratory_service.domain.exceptions import InvalidSpecimenDataException
+from apps.laboratory_service.domain.value_objects import SpecimenType
 
 
 class Specimen:
     """
     Domain Entity representing a physical specimen collected from a patient.
-    
-    Identity is strictly defined by `specimen_id`. 
+
+    Identity is strictly defined by `specimen_id`.
     Enforces domain invariants around barcode format and collection timestamps.
     """
 
@@ -23,7 +24,7 @@ class Specimen:
         collected_at: datetime,
     ):
         self._validate_invariants(specimen_id, barcode, collected_at)
-        
+
         self.id = specimen_id
         self.type = specimen_type
         self.barcode = barcode.strip().upper()
@@ -48,7 +49,9 @@ class Specimen:
             collected_at=collected_at or datetime.now(timezone.utc),
         )
 
-    def _validate_invariants(self, specimen_id: uuid.UUID, barcode: str, collected_at: datetime) -> None:
+    def _validate_invariants(
+        self, specimen_id: uuid.UUID, barcode: str, collected_at: datetime
+    ) -> None:
         """Enforces clinical business rules on creation/hydration."""
         if not isinstance(specimen_id, uuid.UUID):
             raise InvalidSpecimenDataException("Specimen ID must be a valid UUID instance.")
@@ -57,10 +60,14 @@ class Specimen:
             raise InvalidSpecimenDataException("Specimen barcode cannot be empty or blank.")
 
         if len(barcode.strip()) < 5:
-            raise InvalidSpecimenDataException("Specimen barcode must be at least 5 characters long.")
+            raise InvalidSpecimenDataException(
+                "Specimen barcode must be at least 5 characters long."
+            )
 
         if not isinstance(collected_at, datetime):
-            raise InvalidSpecimenDataException("collected_at must be a valid timezone-aware datetime instance.")
+            raise InvalidSpecimenDataException(
+                "collected_at must be a valid timezone-aware datetime instance."
+            )
 
     def __eq__(self, other: object) -> bool:
         """Entities are equal if they share the exact same domain identity (UUID)."""

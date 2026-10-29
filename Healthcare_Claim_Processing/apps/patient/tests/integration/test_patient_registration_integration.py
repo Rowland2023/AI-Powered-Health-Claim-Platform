@@ -3,10 +3,6 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
-from sqlalchemy import select
-
-from shared.infrastructure.database.session import SessionFactory
-
 from patient.application.commands.register_patient import (
     RegisterPatientCommand,
 )
@@ -28,6 +24,8 @@ from patient.infrastructure.persistence.models.patient_model import (
 from patient.infrastructure.persistence.sqlalchemy_unit_of_work import (
     SQLAlchemyUnitOfWork,
 )
+from shared.infrastructure.database.session import SessionFactory
+from sqlalchemy import select
 
 
 @pytest.mark.asyncio
@@ -55,25 +53,15 @@ async def test_patient_registration_integration():
     medical_record_number = "MRN-INTEGRATION-001"
 
     command = RegisterPatientCommand(
-        medical_record_number=MedicalRecordNumber(
-            medical_record_number
-        ),
+        medical_record_number=MedicalRecordNumber(medical_record_number),
         name=PatientName(
             first_name="John",
             last_name="Doe",
         ),
-        email=Email(
-            "john.doe@example.com"
-        ),
-        phone_number=PhoneNumber(
-            "+2348012345678"
-        ),
-        gender=Gender.from_value(
-            "MALE"
-        ),
-        date_of_birth=DateOfBirth.from_date(
-            date(1990, 1, 15)
-        ),
+        email=Email("john.doe@example.com"),
+        phone_number=PhoneNumber("+2348012345678"),
+        gender=Gender.from_value("MALE"),
+        date_of_birth=DateOfBirth.from_date(date(1990, 1, 15)),
         address=Address(
             street="10 Test Street",
             city="Lagos",
@@ -85,28 +73,19 @@ async def test_patient_registration_integration():
 
     # Arrange
 
-    uow = SQLAlchemyUnitOfWork(
-        SessionFactory
-    )
+    uow = SQLAlchemyUnitOfWork(SessionFactory)
 
-    use_case = RegisterPatientUseCase(
-        uow
-    )
+    use_case = RegisterPatientUseCase(uow)
 
     # Act
 
-    patient = await use_case.execute(
-        command
-    )
+    patient = await use_case.execute(command)
 
     # Assert: domain result
 
     assert patient is not None
 
-    assert (
-        patient.medical_record_number.value
-        == medical_record_number
-    )
+    assert patient.medical_record_number.value == medical_record_number
 
     assert patient.name.first_name == "John"
     assert patient.name.last_name == "Doe"
@@ -116,18 +95,12 @@ async def test_patient_registration_integration():
 
     async with SessionFactory() as session:
         result = await session.execute(
-            select(PatientModel).where(
-                PatientModel.medical_record_number
-                == medical_record_number
-            )
+            select(PatientModel).where(PatientModel.medical_record_number == medical_record_number)
         )
 
         persisted_patient = result.scalar_one()
 
-        assert (
-            persisted_patient.medical_record_number
-            == medical_record_number
-        )
+        assert persisted_patient.medical_record_number == medical_record_number
 
         assert persisted_patient.first_name == "John"
         assert persisted_patient.last_name == "Doe"

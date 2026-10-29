@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -18,14 +17,10 @@ class DateOfBirth:
 
     def __post_init__(self) -> None:
         if not isinstance(self.value, date):
-            raise ValueError(
-                "Date of birth must be a valid date."
-            )
+            raise ValueError("Date of birth must be a valid date.")
 
         if self.value >= date.today():
-            raise ValueError(
-                "Date of birth must be in the past."
-            )
+            raise ValueError("Date of birth must be in the past.")
 
     # =========================================================
     # FACTORY
@@ -60,18 +55,13 @@ class DateOfBirth:
         reference_date = on_date or date.today()
 
         if reference_date < self.value:
-            raise ValueError(
-                "Reference date cannot be before date of birth."
-            )
+            raise ValueError("Reference date cannot be before date of birth.")
 
-        years = (
-            reference_date.year
-            - self.value.year
-        )
+        years = reference_date.year - self.value.year
 
-        birthday_has_occurred = (
-            (reference_date.month, reference_date.day)
-            >= (self.value.month, self.value.day)
+        birthday_has_occurred = (reference_date.month, reference_date.day) >= (
+            self.value.month,
+            self.value.day,
         )
 
         if not birthday_has_occurred:

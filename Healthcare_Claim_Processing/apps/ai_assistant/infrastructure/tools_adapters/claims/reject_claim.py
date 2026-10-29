@@ -18,18 +18,8 @@ class RejectClaimTool(Tool):
     def parameters(self):
 
         return [
-
-            ToolParameter(
-                "claim_id",
-                "uuid",
-                "Claim identifier"
-            ),
-
-            ToolParameter(
-                "reason",
-                "string",
-                "Reason for rejection"
-            )
+            ToolParameter("claim_id", "uuid", "Claim identifier"),
+            ToolParameter("reason", "string", "Reason for rejection"),
         ]
 
     def execute(self, **kwargs):

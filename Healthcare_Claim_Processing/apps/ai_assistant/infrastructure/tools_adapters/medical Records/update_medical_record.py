@@ -18,25 +18,9 @@ class UpdateMedicalRecordTool(Tool):
     def parameters(self):
 
         return [
-
-            ToolParameter(
-                "medical_record_id",
-                "uuid",
-                "Medical record identifier"
-            ),
-
-            ToolParameter(
-                "diagnosis",
-                "string",
-                "Updated diagnosis"
-            ),
-
-            ToolParameter(
-                "treatment_plan",
-                "string",
-                "Updated treatment plan",
-                required=False
-            )
+            ToolParameter("medical_record_id", "uuid", "Medical record identifier"),
+            ToolParameter("diagnosis", "string", "Updated diagnosis"),
+            ToolParameter("treatment_plan", "string", "Updated treatment plan", required=False),
         ]
 
     def execute(self, **kwargs):

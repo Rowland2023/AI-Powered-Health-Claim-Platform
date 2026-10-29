@@ -1,8 +1,6 @@
-
 from datetime import date
 
 import pytest
-
 from patient.domain.value_objects.address import Address
 from patient.domain.value_objects.date_of_birth import DateOfBirth
 from patient.domain.value_objects.email import Email

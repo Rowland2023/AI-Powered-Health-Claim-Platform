@@ -11,11 +11,9 @@ from pydantic import ValidationError
 from ai_assistant.presentation.http.controllers.ai_assistant import (
     AIController,
 )
-
 from ai_assistant.presentation.http.serializers.ai_request_serializer import (
     AIRequestSerializer,
 )
-
 from ai_assistant.presentation.http.serializers.tool_call_serializer import (
     ToolCallSerializer,
 )
@@ -27,14 +25,10 @@ def _parse_json_body(request) -> dict:
     """
 
     try:
-        return json.loads(
-            request.body.decode("utf-8")
-        )
+        return json.loads(request.body.decode("utf-8"))
 
     except (JSONDecodeError, UnicodeDecodeError) as exc:
-        raise ValueError(
-            "Request body must contain valid JSON."
-        ) from exc
+        raise ValueError("Request body must contain valid JSON.") from exc
 
 
 def _validation_error(
@@ -85,9 +79,7 @@ def create_ai_views(
         try:
             payload = _parse_json_body(request)
 
-            serializer = AIRequestSerializer.model_validate(
-                payload
-            )
+            serializer = AIRequestSerializer.model_validate(payload)
 
         except ValueError as exc:
             return JsonResponse(
@@ -104,9 +96,7 @@ def create_ai_views(
         except ValidationError as exc:
             return _validation_error(exc)
 
-        user_id_header = request.headers.get(
-            "X-User-ID"
-        )
+        user_id_header = request.headers.get("X-User-ID")
 
         if not user_id_header:
             return JsonResponse(
@@ -114,9 +104,7 @@ def create_ai_views(
                     "success": False,
                     "error": {
                         "code": "MISSING_USER_ID",
-                        "message": (
-                            "X-User-ID header is required."
-                        ),
+                        "message": ("X-User-ID header is required."),
                     },
                 },
                 status=400,
@@ -131,9 +119,7 @@ def create_ai_views(
                     "success": False,
                     "error": {
                         "code": "INVALID_USER_ID",
-                        "message": (
-                            "X-User-ID must be a valid UUID."
-                        ),
+                        "message": ("X-User-ID must be a valid UUID."),
                     },
                 },
                 status=400,
@@ -159,9 +145,7 @@ def create_ai_views(
         try:
             payload = _parse_json_body(request)
 
-            serializer = ToolCallSerializer.model_validate(
-                payload
-            )
+            serializer = ToolCallSerializer.model_validate(payload)
 
         except ValueError as exc:
             return JsonResponse(
@@ -178,9 +162,7 @@ def create_ai_views(
         except ValidationError as exc:
             return _validation_error(exc)
 
-        result = await controller.execute_tool(
-            serializer
-        )
+        result = await controller.execute_tool(serializer)
 
         return JsonResponse(
             result,
@@ -211,9 +193,7 @@ def create_ai_views(
         tool_name: str,
     ):
 
-        result = await controller.explain_tool(
-            tool_name
-        )
+        result = await controller.explain_tool(tool_name)
 
         return JsonResponse(
             result,
@@ -230,9 +210,7 @@ def create_ai_views(
         conversation_id: UUID,
     ):
 
-        result = await controller.history(
-            conversation_id
-        )
+        result = await controller.history(conversation_id)
 
         return JsonResponse(
             result,
@@ -249,9 +227,7 @@ def create_ai_views(
         conversation_id: UUID,
     ):
 
-        result = await controller.summarize(
-            conversation_id
-        )
+        result = await controller.summarize(conversation_id)
 
         return JsonResponse(
             result,

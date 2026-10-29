@@ -16,8 +16,8 @@ from apps.laboratory_service.domain.repositories import ILaboratoryRepository
 class ValidateLabResultUseCase:
     """
     Application use case to mark lab results as FINAL.
-    
-    Validates order invariants, transitions status to COMPLETED, delegates 
+
+    Validates order invariants, transitions status to COMPLETED, delegates
     outbox event staging to the repository layer, and returns the audited read model.
     """
 
@@ -49,8 +49,8 @@ class ValidateLabResultUseCase:
         specimen_dto = None
         if aggregate.specimen:
             type_str = (
-                aggregate.specimen.type.value 
-                if hasattr(aggregate.specimen.type, "value") 
+                aggregate.specimen.type.value
+                if hasattr(aggregate.specimen.type, "value")
                 else str(aggregate.specimen.type)
             )
             specimen_dto = SpecimenOutputDTO(
@@ -61,15 +61,15 @@ class ValidateLabResultUseCase:
             )
 
         status_str = (
-            aggregate.status.value 
-            if hasattr(aggregate.status, "value") 
-            else str(aggregate.status)
+            aggregate.status.value if hasattr(aggregate.status, "value") else str(aggregate.status)
         )
 
         results_dtos = [
             TestResultOutputDTO(
                 result_id=res.id,
-                test_code=res.test_code.code if hasattr(res.test_code, "code") else str(res.test_code),
+                test_code=res.test_code.code
+                if hasattr(res.test_code, "code")
+                else str(res.test_code),
                 test_name=getattr(res.test_code, "name", ""),
                 value=res.value,
                 unit=res.unit,

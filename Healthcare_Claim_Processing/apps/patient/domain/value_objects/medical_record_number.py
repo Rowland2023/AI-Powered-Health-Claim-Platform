@@ -13,13 +13,9 @@ class MedicalRecordNumber:
         value = self.value.strip()
 
         if not value:
-            raise ValueError(
-                "Medical record number cannot be empty."
-            )
+            raise ValueError("Medical record number cannot be empty.")
 
         if len(value) > 100:
-            raise ValueError(
-                "Medical record number cannot exceed 100 characters."
-            )
+            raise ValueError("Medical record number cannot exceed 100 characters.")
 
         object.__setattr__(self, "value", value)

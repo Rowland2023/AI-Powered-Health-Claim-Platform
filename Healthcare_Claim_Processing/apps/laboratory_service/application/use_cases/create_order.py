@@ -13,8 +13,8 @@ from apps.laboratory_service.domain.repositories import ILaboratoryRepository
 class CreateLabOrderUseCase:
     """
     Application use case to initiate a new laboratory order from a clinical encounter.
-    
-    Orchestrates domain instantiation, delegates transactional persistence & outbox 
+
+    Orchestrates domain instantiation, delegates transactional persistence & outbox
     staging to the repository layer, and returns a clean Output DTO boundary.
     """
 
@@ -43,9 +43,7 @@ class CreateLabOrderUseCase:
     @staticmethod
     def _map_to_output_dto(aggregate: LaboratoryOrderAggregate) -> LaboratoryOrderOutputDTO:
         status_str = (
-            aggregate.status.value 
-            if hasattr(aggregate.status, "value") 
-            else str(aggregate.status)
+            aggregate.status.value if hasattr(aggregate.status, "value") else str(aggregate.status)
         )
         return LaboratoryOrderOutputDTO(
             order_id=aggregate.id,

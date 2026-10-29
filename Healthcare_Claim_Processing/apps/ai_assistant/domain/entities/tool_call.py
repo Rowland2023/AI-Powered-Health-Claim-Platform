@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Any
 from uuid import UUID, uuid4
 
-from ..value_objects.tool_name import ToolName
 from ..value_objects.tool_argument import ToolArgument
+from ..value_objects.tool_name import ToolName
 from ..value_objects.tool_result import ToolResult
 
 
@@ -29,9 +28,7 @@ class ToolCall:
 
     executed_at: datetime | None = None
 
-    created_at: datetime = field(
-        default_factory=lambda: datetime.now(UTC)
-    )
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @classmethod
     def create(

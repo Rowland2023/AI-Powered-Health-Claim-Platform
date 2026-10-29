@@ -3,11 +3,10 @@ from __future__ import annotations
 from datetime import date, datetime
 from uuid import UUID
 
+from shared.infrastructure.persistence.base import Base
 from sqlalchemy import Boolean, Date, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from shared.infrastructure.persistence.base import Base
 
 
 class PatientModel(Base):

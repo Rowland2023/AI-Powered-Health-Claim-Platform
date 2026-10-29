@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from patient.application.commands.register_patient import (
@@ -36,22 +35,16 @@ class RegisterPatientUseCase:
     ) -> Patient:
 
         async with self._uow as uow:
-
             # -------------------------------------------------
             # 1. Application-level uniqueness check
             # -------------------------------------------------
 
-            existing_patient = (
-                await uow.patient_repository.get_by_medical_record_number(
-                    command.medical_record_number
-                )
+            existing_patient = await uow.patient_repository.get_by_medical_record_number(
+                command.medical_record_number
             )
 
             if existing_patient is not None:
-                raise ValueError(
-                    "A patient with this medical record number "
-                    "already exists."
-                )
+                raise ValueError("A patient with this medical record number already exists.")
 
             # -------------------------------------------------
             # 2. Let the domain create the aggregate

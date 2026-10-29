@@ -6,11 +6,9 @@ from uuid import UUID
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-
 from patient.presentation.http.controllers.patient_controller import (
     PatientController,
 )
-
 from patient.presentation.http.schemas.patient_schema import (
     RegisterPatientRequest,
     UpdatePatientContactInformationRequest,
@@ -28,13 +26,9 @@ def create_patient_views(
     @require_http_methods(["POST"])
     async def register_patient(request):
         try:
-            payload = json.loads(
-                request.body.decode("utf-8")
-            )
+            payload = json.loads(request.body.decode("utf-8"))
 
-            schema = RegisterPatientRequest.model_validate(
-                payload
-            )
+            schema = RegisterPatientRequest.model_validate(payload)
 
         except JSONDecodeError:
             return JsonResponse(
@@ -48,9 +42,7 @@ def create_patient_views(
                 status=400,
             )
 
-        patient = await controller.register_patient(
-            schema
-        )
+        patient = await controller.register_patient(schema)
 
         return JsonResponse(
             patient.model_dump(mode="json"),
@@ -63,14 +55,9 @@ def create_patient_views(
         patient_id: UUID,
     ):
         try:
-            payload = json.loads(
-                request.body.decode("utf-8")
-            )
+            payload = json.loads(request.body.decode("utf-8"))
 
-            schema = (
-                UpdatePatientContactInformationRequest
-                .model_validate(payload)
-            )
+            schema = UpdatePatientContactInformationRequest.model_validate(payload)
 
         except JSONDecodeError:
             return JsonResponse(
@@ -84,11 +71,9 @@ def create_patient_views(
                 status=400,
             )
 
-        patient = (
-            await controller.update_contact_information(
-                patient_id,
-                schema,
-            )
+        patient = await controller.update_contact_information(
+            patient_id,
+            schema,
         )
 
         return JsonResponse(
