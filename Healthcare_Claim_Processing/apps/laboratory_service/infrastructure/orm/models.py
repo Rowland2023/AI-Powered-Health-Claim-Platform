@@ -53,3 +53,49 @@ class DiagnosticReportResultORMModel(BaseModel):
         constraints = [
             models.UniqueConstraint(fields=["order", "test_code"], name="unique_result_per_order_test")
         ]
+
+
+class LaboratoryOutboxEventORMModel(models.Model):
+    """Stores laboratory domain events alongside aggregate changes."""
+
+    id = models.BigAutoField(primary_key=True)
+
+    event_id = models.UUIDField(unique=True, db_index=True)
+    event_name = models.CharField(max_length=255, db_index=True)
+    aggregate_id = models.UUIDField(db_index=True)
+    event_version = models.PositiveIntegerField(default=1)
+
+    occurred_at = models.DateTimeField()
+
+    correlation_id = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    causation_id = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+
+    payload = models.JSONField()
+    status = models.CharField(
+        max_length=50,
+        default="pending",
+        db_index=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "laboratory_outbox_events"
+        ordering = ["id"]
+        indexes = [
+            models.Index(
+                fields=["status", "created_at"],
+                name="lab_outbox_status_created_idx",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.event_name} ({self.event_id})"
