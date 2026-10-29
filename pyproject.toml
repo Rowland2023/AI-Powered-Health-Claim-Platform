@@ -1,3 +1,8 @@
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ai-powered-health-claim-platform"
 version = "0.1.0"
@@ -24,10 +29,26 @@ dev = [
     "httpx>=0.25",
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "apps",
+    "apps.*",
+    "Healthcare_Claim_Processing",
+    "Healthcare_Claim_Processing.*",
+]
+exclude = [
+    "AI-Powered-Health-Claim-Platform",
+    "AI-Powered-Health-Claim-Platform.*",
+]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "Healthcare_Claim_Processing.settings"
-pythonpath = ["."]
-testpaths = ["apps", "Healthcare_Claim_Processing"]
+pythonpath = ["Healthcare_Claim_Processing", "."]
+testpaths = [
+    "Healthcare_Claim_Processing/apps",
+    "Healthcare_Claim_Processing",
+]
 
 [tool.ruff]
 line-length = 100
