@@ -361,3 +361,4 @@ PostgreSQL
 Redis
 Kafka
 Event-Driven Architecture
+# Testing: pytest apps/patient apps/claim - 125 tests
