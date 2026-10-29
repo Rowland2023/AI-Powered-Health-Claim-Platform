@@ -1,8 +1,7 @@
-# apps/laboratory/domain/entities/test_result.py
+# Healthcare_Claim_Processing/apps/laboratory_service/domain/entities/test_result.py
 
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
 
 from apps.laboratory_service.domain.exceptions import (
     IllegalResultStateTransitionException,
@@ -13,11 +12,14 @@ from apps.laboratory_service.domain.value_objects import LabTestCode, ResultStat
 
 class TestResult:
     """
-    Domain Entity representing the quantitative/qualitative output of a lab test.
+    Domain entity representing the output of a laboratory test.
 
-    Guarantees clinical state machine invariants:
-    - Results cannot be finalized without a valid non-empty value and valid pathologist UUID.
-    - Finalized results cannot be re-finalized without going through explicit amendment flows.
+    Invariants:
+    - Result IDs must be valid UUID instances.
+    - Result values cannot be null or empty.
+    - Finalized results cannot be finalized again.
+    - Cancelled results cannot be finalized.
+    - Finalization requires a valid pathologist UUID.
     """
 
     def __init__(
@@ -28,9 +30,9 @@ class TestResult:
         unit: str,
         reference_range: str,
         status: ResultStatus = ResultStatus.PRELIMINARY,
-        validated_by: Optional[uuid.UUID] = None,
-        validated_at: Optional[datetime] = None,
-    ):
+        validated_by: uuid.UUID | None = None,
+        validated_at: datetime | None = None,
+    ) -> None:
         self._validate_initial_invariants(result_id, value)
 
         self.id = result_id
@@ -49,11 +51,9 @@ class TestResult:
         value: str,
         unit: str,
         reference_range: str,
-        result_id: Optional[uuid.UUID] = None,
+        result_id: uuid.UUID | None = None,
     ) -> "TestResult":
-        """
-        Factory method for instantiating a new preliminary lab test result.
-        """
+        """Create a new preliminary laboratory test result."""
         return cls(
             result_id=result_id or uuid.uuid4(),
             test_code=test_code,
@@ -65,16 +65,18 @@ class TestResult:
 
     def mark_as_final(self, pathologist_id: uuid.UUID) -> None:
         """
-        Transitions result status to FINAL when validated by an authorized pathologist.
+        Finalize the result and record its validating pathologist.
 
-        Enforces clinical invariants:
-        1. Result must not already be in FINAL or CANCELLED status.
-        2. Pathologist ID must be a valid UUID.
-        3. Result value must be present.
+        Raises:
+            IllegalResultStateTransitionException:
+                If the result is already final or has been cancelled.
+            InvalidResultDataException:
+                If the pathologist ID or result value is invalid.
         """
         if self.status == ResultStatus.FINAL:
             raise IllegalResultStateTransitionException(
-                f"Test result '{self.id}' is already finalized and cannot be re-validated."
+                f"Test result '{self.id}' is already finalized "
+                "and cannot be re-validated."
             )
 
         if self.status == ResultStatus.CANCELLED:
@@ -88,28 +90,46 @@ class TestResult:
             )
 
         if not self.value:
-            raise InvalidResultDataException("Cannot finalize a test result with an empty value.")
+            raise InvalidResultDataException(
+                "Cannot finalize a test result with an empty value."
+            )
 
         self.status = ResultStatus.FINAL
         self.validated_by = pathologist_id
         self.validated_at = datetime.now(timezone.utc)
 
-    def _validate_initial_invariants(self, result_id: uuid.UUID, value: str) -> None:
+    @staticmethod
+    def _validate_initial_invariants(
+        result_id: uuid.UUID,
+        value: str,
+    ) -> None:
+        """Validate the required identity and result value."""
         if not isinstance(result_id, uuid.UUID):
-            raise InvalidResultDataException("Result ID must be a valid UUID instance.")
+            raise InvalidResultDataException(
+                "Result ID must be a valid UUID instance."
+            )
 
-        if value is None or not str(value).strip():
-            raise InvalidResultDataException("Test result value cannot be null or empty string.")
+        if value is None or not isinstance(value, str) or not value.strip():
+            raise InvalidResultDataException(
+                "Test result value cannot be null or empty string."
+            )
 
     def __eq__(self, other: object) -> bool:
+        """Compare results by their unique identifiers."""
         if not isinstance(other, TestResult):
-            return False
+            return NotImplemented
         return self.id == other.id
 
     def __hash__(self) -> int:
+        """Hash the entity by its unique identifier."""
         return hash(self.id)
 
     def __repr__(self) -> str:
-        code_str = self.test_code.code if hasattr(self.test_code, "code") else str(self.test_code)
-        status_str = self.status.value if hasattr(self.status, "value") else str(self.status)
-        return f"<TestResult id={self.id} code='{code_str}' status={status_str}>"
+        """Return a concise diagnostic representation."""
+        code = getattr(self.test_code, "code", str(self.test_code))
+        status = getattr(self.status, "value", str(self.status))
+
+        return (
+            f"<TestResult id={self.id} "
+            f"code='{code}' status={status}>"
+        )
