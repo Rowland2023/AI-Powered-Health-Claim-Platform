@@ -27,7 +27,8 @@ class LaboratoryOrderAggregate:
 
     Guarantees domain boundary integrity:
     - Encapsulates physical specimens and attached diagnostic test results.
-    - Enforces state machine transitions: REQUESTED -> SPECIMEN_COLLECTED -> PROCESSING -> VALIDATED.
+    - Enforces state transitions:
+      REQUESTED -> SPECIMEN_COLLECTED -> PROCESSING -> VALIDATED.
     - Stages domain events for outbox persistence upon state changes.
     """
 
@@ -90,7 +91,7 @@ class LaboratoryOrderAggregate:
 
         type_enum = SpecimenType(specimen_type) if isinstance(specimen_type, str) else specimen_type
 
-        # Delegate instantiation to Specimen factory to ensure invariant checks and timestamp defaults
+        # Use the Specimen factory to enforce invariants and timestamp defaults.
         self.specimen = Specimen.create(
             specimen_type=type_enum,
             barcode=barcode,
@@ -142,7 +143,8 @@ class LaboratoryOrderAggregate:
 
         if self.status != LabOrderStatus.PROCESSING:
             raise InvalidOrderStateException(
-                f"Order '{self.id}' must be in PROCESSING status to validate results. Current status: '{self.status}'."
+                f"Order '{self.id}' must be in PROCESSING status "
+                f"to validate results. Current status: '{self.status}'."
             )
 
         # Triggers entity-level invariants on each result child
@@ -171,5 +173,12 @@ class LaboratoryOrderAggregate:
         self._domain_events.clear()
 
     def __repr__(self) -> str:
-        status_str = self.status.value if hasattr(self.status, "value") else str(self.status)
-        return f"<LaboratoryOrderAggregate id={self.id} status={status_str} results_count={len(self.results)}>"
+        status_str = (
+            self.status.value
+            if hasattr(self.status, "value")
+            else str(self.status)
+        )
+        return (
+            f"<LaboratoryOrderAggregate id={self.id} "
+            f"status={status_str} results_count={len(self.results)}>"
+        )

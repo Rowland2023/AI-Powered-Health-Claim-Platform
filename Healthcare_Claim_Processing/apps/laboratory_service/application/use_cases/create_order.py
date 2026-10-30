@@ -33,8 +33,8 @@ class CreateLabOrderUseCase:
                 ordering_physician_id=dto.ordering_physician_id,
             )
 
-            # 2. Delegate state persistence AND Outbox event staging to repository
-            # (Repository internally handles transaction-safe outbox writes & calls clear_domain_events)
+            # 2. Delegate persistence and outbox event staging to the repository.
+            # It handles transactional outbox writes and clears domain events.
             self.lab_repo.save(order)
 
             # 3. Construct and return Output DTO

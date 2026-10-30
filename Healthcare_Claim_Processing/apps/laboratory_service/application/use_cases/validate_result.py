@@ -29,7 +29,8 @@ class ValidateLabResultUseCase:
         Executes the result validation and sign-off workflow atomically.
         """
         with transaction.atomic():
-            # 1. Fetch aggregate root with pessimistic lock to prevent race conditions during sign-off
+            # 1. Fetch the aggregate root with a pessimistic lock.
+            # This prevents race conditions during sign-off.
             order = self.lab_repo.find_by_id(dto.order_id, for_update=True)
             if not order:
                 raise OrderNotFoundException(order_id=str(dto.order_id))

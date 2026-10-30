@@ -28,7 +28,8 @@ class ILaboratoryRepository(ABC):
         :param aggregate: The aggregate root instance to persist.
         :param expected_version: Optional version tag for optimistic concurrency control.
         :raises ConcurrencyException: If `expected_version` does not match the database version.
-        :raises RepositoryPersistenceException: If a database error occurs during transaction execution.
+        :raises RepositoryPersistenceException: If a database error occurs
+            during transaction execution.
         """
         pass
 
