@@ -34,7 +34,7 @@ class InsurancePolicyModel(Base):
         nullable=False,
     )
 
-    patient: Mapped["PatientModel"] = relationship(
+    patient: Mapped["PatientModel"] = relationship(  # noqa: F821
         "PatientModel",
         back_populates="insurance_policy",
     )

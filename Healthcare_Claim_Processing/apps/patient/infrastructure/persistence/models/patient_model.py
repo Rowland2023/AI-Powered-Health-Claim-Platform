@@ -105,14 +105,14 @@ class PatientModel(Base):
         nullable=False,
     )
 
-    insurance_policy: Mapped["InsurancePolicyModel | None"] = relationship(
+    insurance_policy: Mapped["InsurancePolicyModel | None"] = relationship(  # noqa: F821
         "InsurancePolicyModel",
         back_populates="patient",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
-    emergency_contacts: Mapped[list["EmergencyContactModel"]] = relationship(
+    emergency_contacts: Mapped[list["EmergencyContactModel"]] = relationship(  # noqa: F821
         "EmergencyContactModel",
         back_populates="patient",
         cascade="all, delete-orphan",

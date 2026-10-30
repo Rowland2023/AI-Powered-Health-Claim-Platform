@@ -56,7 +56,7 @@ class EmergencyContactModel(Base):
         nullable=True,
     )
 
-    patient: Mapped["PatientModel"] = relationship(
+    patient: Mapped["PatientModel"] = relationship(  # noqa: F821
         "PatientModel",
         back_populates="emergency_contacts",
     )

@@ -26,26 +26,40 @@ from sqlalchemy.ext.asyncio import (
 TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/healthcare_test"
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def engine():
     engine = create_async_engine(
         TEST_DATABASE_URL,
         echo=False,
     )
 
-    yield engine
+    try:
+        async with engine.begin() as connection:
+            await connection.run_sync(
+                OutboxEventModel.__table__.create,
+                checkfirst=True,
+            )
 
-    await engine.dispose()
+        yield engine
+
+    finally:
+        try:
+            async with engine.begin() as connection:
+                await connection.run_sync(
+                    OutboxEventModel.__table__.drop,
+                    checkfirst=True,
+                )
+        finally:
+            await engine.dispose()
 
 
 @pytest.fixture
-async def session_factory(engine):
+def session_factory(engine):
     return async_sessionmaker(
         engine,
         class_=AsyncSession,
         expire_on_commit=False,
     )
-
 
 @pytest_asyncio.fixture
 async def session(session_factory):
@@ -57,12 +71,17 @@ async def session(session_factory):
 def patient() -> Patient:
     return Patient.register(
         medical_record_number=MedicalRecordNumber("MRN-OUTBOX-001"),
-        name=PatientName("John Doe"),
+        name=PatientName("John", "Doe"),
         email=Email("john@example.com"),
         phone_number=PhoneNumber("+2348012345678"),
-        gender=Gender("male"),
+        gender=Gender.from_value("MALE"),
         date_of_birth=DateOfBirth(date(1990, 1, 1)),
-        address=Address("Lagos, Nigeria"),
+        address=Address(
+           street="12 Allen Avenue",
+           city="Ikeja",
+           state="Lagos",
+           postal_code="100001",
+        ),
     )
 
 
@@ -102,7 +121,13 @@ async def test_add_all_domain_events(
     patient.update_contact_information(
         email=Email("updated@example.com"),
         phone_number=PhoneNumber("+2348098765432"),
-        address=Address("Abuja, Nigeria"),
+        address=Address(
+            street="12 Allen Avenue",
+            city="Ikeja",
+            state="Lagos",
+            postal_code="100001",
+            country="NG",
+        ),
     )
 
     events = patient.domain_events
